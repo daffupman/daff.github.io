@@ -7,7 +7,7 @@
 <title>
     代码优雅之道 | 
 </title>
-<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1629124896075">
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1629125804908">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -35,7 +35,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://daffupman.github.io">
-                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1629124896075" alt="">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1629125804908" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -112,7 +112,7 @@
                             <time class="post-time">2021-08-15</time>
                             
                                 <a href="https://daffupman.github.io/-sD8N--bb/" class="post-tag i-tag
-                            i-tag-primary">
+                            i-tag-other_2">
                             #设计原则
                         </a>
                                 
@@ -147,6 +147,14 @@
 <h3 id="里氏替换原则lsp">里氏替换原则（LSP）</h3>
 <p>子类对象能够替换程序中父类对象出现的任何地方，并且保证原来程序的逻辑行为不变即正确性不被破坏。里氏替换原则用来指导继承关系中子类该如何设计的一个原则。父类定义了函数的约定（协议），那子类可以改变函数的内部实现逻辑，但不能改变函数原有的约定。这里的约定包含：函数声明要实现的功能；对输入、输出、异常的约定，甚至包括注视中所罗列的任何特殊说明。</p>
 <p>LSP与多态有相似之处，但它们关注的角度不一样。多态是面向对象编程的一大特性，也是面向对象编程语言的一种语法，他是一种代码实现思路。而里氏替换原则是一种设计原则。</p>
+<h3 id="接口隔离原则isp">接口隔离原则（ISP）</h3>
+<p>客户端不应该强迫依赖它不需要的接口。对于“接口”的理解，可以有：</p>
+<ol>
+<li>一组接口集合。可以是某个微服务的接口，也可以是某个类库的接口。如果部分接口只被部分调用者使用，那么就需要将这部分接口隔离出来，单独给这部分调用者使用，而不是强迫其他调用者也依赖这部分不会被用到的接口。</li>
+<li>单个API接口或函数，部分调用只需要函数中的部分功能，那么就需要把函数分成粒度更细的多个函数，让调用者只依赖它需要的函数。</li>
+<li>OOP中的接口。即接口设计要尽量单一，不要让接口的实现类和调用者，依赖不需要的接口函数。</li>
+</ol>
+<p>SRP针对的是模块、类和接口的设计。ISP相对于SRP，一方面更侧重接口的设计，另一方面他的思考角度也是不同的。ISP提供了一种接口的职责是否单一的判断标准：通过调用者如何使用接口来间接地判断。如果调用者只使用部分接口或接口的部分功能，那接口的设计就不够职责单一。</p>
 
                                 </div>
                     </article>
@@ -185,6 +193,7 @@
 <li><a href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99srp">单一职责原则（SRP）</a></li>
 <li><a href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99ocp">开闭原则（OCP）</a></li>
 <li><a href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2%E5%8E%9F%E5%88%99lsp">里氏替换原则（LSP）</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99isp">接口隔离原则（ISP）</a></li>
 </ul>
 </li>
 </ul>
