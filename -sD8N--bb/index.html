@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    git | 
+    设计原则 | 
 </title>
 <link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1629073763192">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -98,175 +98,47 @@
                     
     <div class="i-card">
         <b>标签：#
-        git</b>
+        设计原则</b>
     </div>
     
         
             <article class="post i-card">
                 <h2 class="post-title">
-                    <a href="https://daffupman.github.io/br1NMVbE5/">
-                        Git操作指南
+                    <a href="https://daffupman.github.io/u-JPrYlkM/">
+                        代码优雅之道
                     </a>
                 </h2>
                 <div class="post-info">
-                    <time class="post-time">2021-03-14</time>
+                    <time class="post-time">2021-08-15</time>
                     
-                        <a href="https://daffupman.github.io/SfRQdaNBV/" class="post-tag i-tag
-                            i-tag-info">
-            #git
+                        <a href="https://daffupman.github.io/-sD8N--bb/" class="post-tag i-tag
+                            i-tag-banana">
+            #设计原则
         </a>
                         
                 </div>
                 <div class="post-article">
                     
-                        <a href="https://daffupman.github.io/br1NMVbE5/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/git_cover.jfif) ">
-                        </a>
-                        
                             <div class="post-content">
                                 
                                         <div class="post-content-content">
-                                            快速上手
-
-git下载地址：https://git-scm.com/
-配置用户信息git config --global user.name = &amp;lt;username&amp;gt;   # 配置用户名，加&amp;quot;&amp;quot;
-git config --global user.email = &amp;lt;useremail&amp;gt;    # 配置邮箱，加&amp;quot;&amp;quot;
-git config --list # 查询配置信息
-
-
-创建目录并初始化仓库，会生成一个.git的隐藏文件夹git init &amp;lt;dirName&amp;gt;
-
-
-关联远程仓库git remote add &amp;lt;name&amp;gt; &amp;lt;url&amp;gt;		# 添加远程仓库
-git remote						#列出所有远程仓库
-
-
-复制远程仓库中的项目git clone &amp;lt;url&amp;gt;
-
-
-文件提交git add &amp;lt;file&amp;gt;						#把文件从workspace添加进index中
-git commit &amp;lt;file&amp;gt; -m &amp;lt;comment&amp;gt;		#把文件从index添加进repostory中
-
-
-从远程仓库更新项目git pull &amp;lt;name&amp;gt; master
-
-
-提交到远程仓库git push &amp;lt;name&amp;gt; master
-
-
-
-Git原理
-Git工作空间
-
-Git常用命令
-
-
-查看当前状态
-git status
-
-
-
-把指定文件恢复到暂存区
-git reset HEAD &amp;lt;file&amp;gt;
-
-
-
-把暂存区的文件恢复并覆盖到工作区
-git checkout -- &amp;lt;file&amp;gt;
-
-
-
-查看提交历史
-git log
-
-
-
-文件在各个空间的切换
-
-HEAD指针指向仓库中的当前版本：HEAD~n,表示前第n个版本；
-移动HEAD指向，指向上一个快照；再将指针指向的快照回滚带暂存区（默认情况）
-git reset --mixed HEAD~
-
-移动HEAD指针的指向，指向上一个快照
-git reset --soft HEAD~
-
-移动HEAD指针的指向，指向上一个快照；将指向的快照回滚到暂存区；将暂存区的文件还原到工作区
-git reset --hard HEAD~
-
-
-
-版本回滚
-回滚到指定快照
-git log			#查看快照id（一串哈希值）
-git reset [id]	#回到该id快照
-
-
-
-版本比较
-
-比较工作空间和暂存目录git diff
-
-
-比较两个历史快照git diff 快照id1 快照id2
-
-
-比较当前工作去和仓库中的快照git diff 快照id
-
-
-比较暂存区和仓库的快照(不加快照id默认是HEAD指向的版本)git diff --cached 快照ud
-
-
-奥义图
-
-
-
-
-其他
-
-更正最新一次的提交备注git commit --amend -m &amp;quot;description&amp;quot;
-
-
-删除文件（除了删除工作区域和暂存区域的该文件外，还需要修改仓库HEAD指向，将其指向上一个版本，上个版本是不包含该文件的）git rm &amp;lt;file&amp;gt;
-git reset --soft HEAD~
-
-
-删除暂存区域的文件， 不会删除工作目录的文件git rm --cached &amp;lt;file&amp;gt;
-
-
-重命名文件git mv &amp;lt;oldname&amp;gt; &amp;lt;newname&amp;gt;
-
-
-
-
-
-Git分支
-
-创建新分支git branch &amp;lt;branchname&amp;gt;
-
-
---decorate:下那是tag信息； --oneline:精简显示每个快照； --graph:图形化显示git log --decorate --oneline --graph -all
-
-
-切换分支，此时HEAD指针会指向切换的分支上git checkout &amp;lt;brachname&amp;gt;
-git checkout -b &amp;lt;branchname&amp;gt;		#创建分支，并切换到新分支中
-
-
-合并分支git merge &amp;lt;branchname&amp;gt;
-
-
-删除分支git branch -d &amp;lt;branchname&amp;gt;
-
-
-
-ssh授权
-
-授权命令，以生成公钥和私钥： ssh-keygen -t rsa
-在github上的settings-&amp;gt;SSH and GPG keys中添加公钥
-验证是否授权成功：ssh -T git@github.com
-
+                                            前言
+从毕业开始以来，自己也当两年的程序员。两年的开发，实际上大多数都是CRUD操作和少部分的非业务开发。CRUD上驾轻就熟，以至于对程序产生一点点自负感：代码也就如此，自己可以去学习各种各样的中间件，甚至是换个语言。但是仔细想了想，之前在阅读spring和shiro的源码中，可是花了很多时间，照着网上的阅读思路，也就勉强懂了点皮毛。也渐渐意识到，自己的代码能力还远远不够的，但也不知如何提高。
+直到今年年初换了一家新公司，再熟悉原来的业务代码逻辑的时候，发现了项目中的代码并非是简单的CRUD过程，而是运用了大量的设计模式。公司也有着一套封装好了的业务框架，框架源码也是运用了各种设计模式，整个代码看起来很优美。这个时候我意思到，自己写的代码是多么的丑陋不堪——用面向对象语言写着面向过程的代码，代码读起来很生硬，存在重复代码，也无扩展可言。
+从此，开始阅读设计模式相关的资料，其中让我大有受益的是极客时间的一个专栏《设计模式之美》。文章读起来很顺畅，分析痛彻，让我看到了自己的很多问题。同时也启发着我该如何写代码。下面是我学习到的一些内容概括和总结。
+思路
+与很多书和资料不同的是，《设计模式之美》一开始用了大量的笔墨描述了面向对象、设计原则、代码重构和编码规范，然后才是说到各种设计模式。实际上，所有的内容都在阐述一个问题。即，如何解耦代码，使得代码可读、可复用、可拓展。
+面向对象
+在学校里学习编程的时候，就学过什么是面向对象，面向对象的特性。直到现在，才对面向对象有着一点具体的认识。再结合这部分内容来看，大概的认识有。
+面向对象编程是一种编程范式，也就是一种编程风格。与面向过程相比较起来看，面向对象的代码组织是以类或对象组织的，并有着四大特性（或者三大特性）。我们知道，面向过程编程重在过程（函数），站着执行的角度，实际上不同的人来看这样的代码是需要照着执行逻辑去厘清思路的。而面向对象编程，是以人的思维来组织代码的，这样的代码更加可读，维护更加容易。因此面向对象更加高级。我们应有意识地去运用面向对象来改善我们的代码。在开发中，还有一点需要特别注意的是，在有需求的时候，第一步不是直接写代码，而是先做面向对象分析和面向对象设计。面向对象分析就是要搞清楚要做什么，面向对象设计就是搞清楚怎么做，最后才是面向对象编程，输出代码。
+关于四大特性：封装、抽象、继承和多态的作用。封装的目的在于对数据做访问保护，抽象对方法的具体实现做隐藏。而继承侧重表示is-a的关系，复用代码，多态表示has-a关系，有利于代码的复用和拓展。正是由于这些丰富的特性，使得面向对象对象语言更加适合流程复杂的系统，使得项目代码易拓展、易复用和易维护。
+在项目中，也有着经典的面向过程的编码表现，比如：滥用getter和setter方法；Constants类和Utils类的设计问题；以及基于贫血模型的开发模式。
+在面向对象编程中，接口和抽象类是实现代码可复用、可维护和可拓展的重要的基础的工具。接口和抽象类有着相似的地方，不同点也同样明显。在有的语言中，接口是可以替代抽象类的。“基于接口而非实现编程”这条原则不仅仅教我们该怎么写代码，也指导来架构的设计和系统的设计。最后，我们还需要知道“组合优于继承”的原因，该如何使用组合和使用继承。
+设计原则
 
                                         </div>
                                         
-                                            <a class="btn btn-text" href="https://daffupman.github.io/br1NMVbE5/">Read More ~</a>
+                                            <a class="btn btn-text" href="https://daffupman.github.io/u-JPrYlkM/">Read More ~</a>
                             </div>
                 </div>
             </article>
