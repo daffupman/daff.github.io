@@ -7,7 +7,7 @@
 <title>
     代码优雅之道 | 
 </title>
-<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1629125804908">
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1629207417065">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -35,7 +35,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://daffupman.github.io">
-                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1629125804908" alt="">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1629207417065" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -112,7 +112,7 @@
                             <time class="post-time">2021-08-15</time>
                             
                                 <a href="https://daffupman.github.io/-sD8N--bb/" class="post-tag i-tag
-                            i-tag-other_4">
+                            i-tag-banana">
                             #设计原则
                         </a>
                                 
@@ -155,6 +155,32 @@
 <li>OOP中的接口。即接口设计要尽量单一，不要让接口的实现类和调用者，依赖不需要的接口函数。</li>
 </ol>
 <p>SRP针对的是模块、类和接口的设计。ISP相对于SRP，一方面更侧重接口的设计，另一方面他的思考角度也是不同的。ISP提供了一种接口的职责是否单一的判断标准：通过调用者如何使用接口来间接地判断。如果调用者只使用部分接口或接口的部分功能，那接口的设计就不够职责单一。</p>
+<h3 id="依赖反转原则dip">依赖反转原则（DIP）</h3>
+<p>高层模块不要依赖低层模块。高层模块和低层模块应该通过抽象来相互依赖。这个原则主要用来指导框架层面的设计。高层模块是调用者，低层模块是被调用的代码，两者之间应该通过一层抽象来连接，而不是直接相互关联。</p>
+<p>控制反转是一种设计思想。“控制”指的是程序员对代码流程的控制，“反转”指的是程序员不再直接控制代码流程，而是将控制权交给框架。在具体操作上，依赖注入是常用的手段。</p>
+<h3 id="kiss原则与yagni原则">KISS原则与YAGNI原则</h3>
+<p>KISS原则要求代码尽量保持简单。而如果判断代码是简单的，并不是代码行数少，代码就简单，还要考虑代码逻辑的复杂度，实现难度和可读性等。这里有几条判断代码是否符合KISS原则的指导建议：</p>
+<ol>
+<li>不要使用同事可能不懂的技术来实现代码；</li>
+<li>不重复造轮子，善于使用已有的工具类库；</li>
+<li>不要过度优化，不要过度使用一些奇技淫巧来优化代码，牺牲代码的可读性。</li>
+</ol>
+<p>YAGNI：You Aint't Gonna Need It。你不会需要它。也就是说不要去设计当前用不到的功能，不要去编写当前用不到的代码。这条原则的核心思想：不要过度设计。KISS原则说的“如何做”的问题，YAGNI原则说的“要不要做”的问题。</p>
+<h3 id="dry原则">DRY原则</h3>
+<p>DRY原则：Don't Repeat Yourself。指的是不要写重复的代码。那如何判断代码是否是重复的。实际上，代码的重复分为：实现逻辑重复、功能语义重复和代码执行重复。 实现逻辑重复，但功能语义不重复的代码，不违反DRY原则。实现逻辑不重复，但功能语义重复的代码，也算违反DRY原则。</p>
+<p>满足DRY原则的方法一般是复用代码。代码复用的方法一般有：</p>
+<ul>
+<li>减少代码耦合</li>
+<li>满足单一职责原则</li>
+<li>模块化</li>
+<li>业务与非业务逻辑分离</li>
+<li>通用代码下沉</li>
+<li>继承、多态、抽象、封装</li>
+<li>应用模版等设计模式</li>
+</ul>
+<p>但是不要为了不明确的、开发成本高的代码而强行复用代码，我们可以在持续重构中慢慢的将代码复用。相对于代码的可复用性，DRY原则适用性更强一些。我们可以不写可复用的代码，但一定不能写重复的代码（语义重复）。</p>
+<h3 id="迪米特法则lod">迪米特法则（LOD）</h3>
+<p>LOD也叫最小知识原则。每个模块之应该了解那些与它关系亲密的模块。LOD是希望减少类之间的耦合，让类越独立越好，每个类都应该少了解系统的其他部分。一旦发生变化，需要了解这一变化的类接回比较少。LOD也是实现代码高内聚、低耦合的一个原则。</p>
 
                                 </div>
                     </article>
@@ -194,6 +220,10 @@
 <li><a href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99ocp">开闭原则（OCP）</a></li>
 <li><a href="#%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2%E5%8E%9F%E5%88%99lsp">里氏替换原则（LSP）</a></li>
 <li><a href="#%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99isp">接口隔离原则（ISP）</a></li>
+<li><a href="#%E4%BE%9D%E8%B5%96%E5%8F%8D%E8%BD%AC%E5%8E%9F%E5%88%99dip">依赖反转原则（DIP）</a></li>
+<li><a href="#kiss%E5%8E%9F%E5%88%99%E4%B8%8Eyagni%E5%8E%9F%E5%88%99">KISS原则与YAGNI原则</a></li>
+<li><a href="#dry%E5%8E%9F%E5%88%99">DRY原则</a></li>
+<li><a href="#%E8%BF%AA%E7%B1%B3%E7%89%B9%E6%B3%95%E5%88%99lod">迪米特法则（LOD）</a></li>
 </ul>
 </li>
 </ul>
