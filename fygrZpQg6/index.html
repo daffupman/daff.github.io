@@ -1,0 +1,307 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    Vue CLI + Antd搭建前端项目 | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            Vue CLI + Antd搭建前端项目
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-04-19</time>
+                            
+                        </div>
+                        
+                                <div class="post-content">
+                                    <h2 id="安装vue-cli">安装vue cli</h2>
+<ol>
+<li>配置代理<pre><code class="language-bash">npm get registry
+npm config set registry http://registry.npm.taobao.org
+</code></pre>
+</li>
+<li>安装vue cli<pre><code class="language-bash">npm install -g @vue/cli@4.5.9
+vue --version
+</code></pre>
+</li>
+<li>创建vue项目<pre><code class="language-bash">cd /vue-example
+vue create vue-example
+# 选择manully select features
+# 增加勾选Typescript、Router和Vuex
+# 选择3.x
+# class-style：no
+# babel alongside typescript：no
+# use history mode：yes
+# linter：ESLint with error prevention only
+# additional lint：lint on save
+# where do you prefer：in dedicated config files
+# save this：y
+# save as：example
+</code></pre>
+</li>
+<li>运行项目<pre><code class="language-bash">npm run serve
+</code></pre>
+</li>
+</ol>
+<h2 id="集成ant-design-vue2x之后的版本支持vue3">集成Ant Design Vue（2.x之后的版本支持vue3）</h2>
+<ol>
+<li>安装依赖<pre><code class="language-bash">npm install ant-design-vue@2.0.0-rc.3 --save
+</code></pre>
+</li>
+<li>在main.ts中引入antd<pre><code class="language-typescript">import antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+</code></pre>
+</li>
+<li>使用antd组件<pre><code class="language-typescript">.use(antd)
+</code></pre>
+</li>
+</ol>
+<h2 id="状态管理工具-vuex">状态管理工具 Vuex</h2>
+<ol>
+<li>
+<p>什么是Vuex<br>
+集中式存储管理应用的所有组件的状态。状态管理应用包含：</p>
+<ul>
+<li>state：驱动应用的数据源</li>
+<li>view：以声明方式将state映射到视图</li>
+<li>actions：响应在view上的用户输入导致的状态变化</li>
+</ul>
+</li>
+<li>
+<p>Vuex的特点</p>
+<ul>
+<li>状态存储是响应式的</li>
+<li>不能直接改变store中的状态，唯一途径就是显式地提交mutation</li>
+</ul>
+</li>
+<li>
+<p>安装依赖</p>
+<pre><code class="language-bash">npm install vuex
+</code></pre>
+</li>
+<li>
+<p>在main.ts中导入组件</p>
+<pre><code class="language-typescript">import {createStore} from 'vuex'
+</code></pre>
+</li>
+<li>
+<p>使用vuex</p>
+<pre><code class="language-typescript">const store = createStore({})
+.use(store)
+</code></pre>
+</li>
+</ol>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://daffupman.github.io/ceDfb9-tr/">
+                                <h3 class="post-title">
+                                    分布式文件系统FastDFS
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85vue-cli">安装vue cli</a></li>
+<li><a href="#%E9%9B%86%E6%88%90ant-design-vue2x%E4%B9%8B%E5%90%8E%E7%9A%84%E7%89%88%E6%9C%AC%E6%94%AF%E6%8C%81vue3">集成Ant Design Vue（2.x之后的版本支持vue3）</a></li>
+<li><a href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-vuex">状态管理工具 Vuex</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '9f58dbffcdaf89d24412',
+            clientSecret: '1285bea2c70ba4c5d996b68cf847056d9b5b68fd',
+            repo: 'daffupman.github.io',
+            owner: 'daffupman',
+            admin: ['daffupman'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

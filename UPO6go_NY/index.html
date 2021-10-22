@@ -1,0 +1,1257 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    mysql | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        mysql</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/YHepijchp/">
+                        MySQL的主从复制
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-11-23</time>
+                    
+                        <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-primary">
+            #mysql
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/YHepijchp/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/mysql-master-slave-replication18-04.jpg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            主从复制原理
+
+搭建一主三从
+修改配置文件
+    vi /etc/my.cnf
+
+在主节点服务器的配置文件中的mysqld节点下增加配置
+
+log-bin=mysql-bin #表示启用二进制日志
+server-id=43 #表示server编号，编号要唯一
+
+在每个从节点服务器的配置文件中的mysqld节点下增加配置
+
+server-id=44
+
+主节点创建复制日志用户
+    # 创建专用于写binlog的用户
+    create user &#39;writebinlog&#39;@&#39;%&#39; identified by &#39;writebinlog&#39;;
+    # 授权
+    grant replication slave on *.* to &#39;writebinlog&#39;@&#39;%&#39;;
+    # 刷新权限
+    flush privileges;
+    # 查看主节点状态
+    show master status;
+    # 如果主节点不是初始状态，需要重置
+    reset master
+
+检查从节点状态
+需要确保从节点执行命令 show slave status\G; 时，显示的是：Empty set。如果不是的话，需要执行：
+    stop slave; #停止复制，相当于终止从服务器上的IO和SQL线程
+    reset slave;
+
+设置从服务器的master
+    # 在从节点上设置，指定主节点
+    change master to master_host=&#39;192.168.35.43&#39;,master_user=&#39;writebinlog&#39;,
+    master_port=3306,master_password=&#39;writebinlog&#39;
+    master_log_file=&#39;mysql-bin.000001&#39;,master_log_pos=156;
+    # 开始执行
+    start slave;
+
+检查测试
+在从节点上 show slave status 命令观察 Slave_IO_Running 和 Slave_SQL_Running 两个参数是否都是Yes。在主节点上做的操作，都会在从节点上同步的。
+双主双从
+修改主节点的配置文件
+第一台主节点的mysqld下增加以下配置
+
+auto_increment_increment=2  # 步长
+auto_increment_offset=1 # 开始的偏移量
+log-slave-updates # binlog记录从另一个主节点同步过来的数据
+sync_binlog=1 # 几次事务后执行同步
+
+第一台主节点的mysqld下增加以下配置
+
+auto_increment_increment=2  # 步长
+auto_increment_offset=1 # 开始的偏移量
+log-slave-updates # binlog记录从另一个主节点同步过来的数据
+sync_binlog=1 # 几次事务后执行同步
+
+主节点上复制日志的用户
+在两台主节点上创建writebinlog用户，步骤同上。（需要先停止之前的slave工作）。双主互为主从。
+
+建议从库开启只读，且连接数据库的账号非root。
+
+重启
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/YHepijchp/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/WZxqM5YDi/">
+                        MySQL的索引及优化
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-11-07</time>
+                    
+                        <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-other_2">
+            #mysql
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/WZxqM5YDi/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/160e88b159fd464b9daa567059476e1b.jpg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            对于MySQL来说，可以使用sql语句查询出我们需要的数据，这是最基本的功能。在表中数据量比较小的情况下，SQL的性能差异并不明显，但是在表数据量比较大的时候，SQL执行的效率就有明显的时间差异。这里会记录我们如何发现SQL的性能问题，如何优化SQL以及优化的底层原理。
+SQL优化
+索引
+主键索引和非主键索引
+非主键索引的叶子节点存放的是主键的值，而主键索引的叶子节点存放的是整行数据。非主键索引也被称为二级索引，而主键索引也被称为聚簇索引。
+如果条件查询使用的是主键索引，那么直接冲索引树上获取整行数据，而条件查询的非主键索引，那么需要从节点上获取主键值，然后再去主键索引树上获取完整的数据。即会发生回表操作。
+聚集索引表示表中存储的数据按照索引的顺序存储，检索效率比非聚集索引高，但对数据更新影响较大。非聚集索引表示数据存储在一个地方，索引存储在另一个地方，索引带有指针指向数据的存储位置。非聚集索引检索效率比聚集索引低，但对数据更新影响较小。
+使用主键自增的索引，可以避免B+树重新排序和页分裂操作。
+测试数据准备
+
+测试数据文件：https://github.com/datacharmer/test_db
+导入数据mysql -uroot -proot &amp;lt; employees.sql
+
+
+测试数据导入是否成功mysql -uroot -proot -t &amp;lt; test_employees_md5.sql
+
+
+
+如何找出效率低的SQL
+要解决SQL效率低的问题就是如何发现哪些SQL导致了执行效率。常用的方法就是 打开慢查询日志 ，命令行方式如下：
+# 开启/关闭慢查询日志，默认off
+set global slow_query_log = ON/OFF
+# 设置慢查询日志的输出位置
+set global slow_query_log_file = log/slow_query.log
+# 设置慢查询的时间阀值，默认10秒，需要重新打开会话可见。测试的时候一般设置成1秒
+set global long_query_time = 1
+# 开启/关闭 记录没有使用索引的sql
+set global log_queries_not_using_indexes = ON/OFF
+
+配置文件方式如下（需要重启）：
+[mysqld]
+log_output=&#39;FILE,TABLE&#39;
+slow_query_log=ON
+long_query_time=0.001
+slow_query_log_file=log/slow_query.log
+
+
+其他相关参数与默认值
+log_output：日志输出的地方。默认FILE，即文件。可以设成TABLE，则日志记录到mysql.slow_log中。也可以设置多种格式，如：FILE，TABLE。
+long_query_time：执行时间超过多久记录到慢查询日志，单位秒，默认10。
+log_queries_not_using_indexes：是否要将未使用索引的SQL记录到慢查询日志中，默认OFF。建议在开发环境开启，生产环境打开。
+log_throttle_queries_not_using_indexes：log_queries_not_using_indexes配置项开启生效，用于限制每分钟写入没有使用慢sql的数量，默认0。
+min_examined_row_limit：扫描行数至少达到多少行会记录到慢查询日志，默认0。
+log_slow_amdin_statements：是否要记录管理语句，默认关闭。管理语句包括：alter table，analyze table，check table，create index，drop index，optimize table，repair table。默认off。
+slow_query_log_file：指定慢查询日志文件路径，默认/var。
+log_slow_slave_statements：该参数在从库上设置，决定是否记录在复制过程中超过long_query_time的SQL，如果binlog格式是row，则改参数无效。
+log_slow_extra：当log_output=FILE，是否要记录额外信息（MySQL8.0.14），对log_output=TABLE无影响。
+
+这样所有的慢查询sql都会记录到 log/slow_query.log 文件里了。我们可以直接阅读文件里的内容，来分析sql的执行问题。但是一般都是借助工具来分析，主要有两种工具：
+
+mysql的官方工具 mysqldumpslow，使用命令：mysqldumpslow [OPTS...][LOGS...]
+
+示例：
+
+mysqldumpslow -s t -t 10 -a db-slow.log
+
+
+percona工具，这是第三方的，需要先下载(https://www.percona.com/downloads/percona-toolkit/3.2.1/binary/redhat/7/x86_64/percona-toolkit-3.2.1-1.el7.x86_64.rpm)：yum install -y perl-DBD-MySQL.x86_64 perl-DBI.x86 perl-Time-HiRes.x86_64 perl-IO-Socket-SSL.noarch perl-TermReadKey.x86_64 perl-Digest-MD5
+rpm -ivh percona-toolkit-3.2.1-1.el7.x86_64.rpm
+
+
+
+
+数据库实时监控sql语句：
+  SELECT id, `user`, `host`, DB, command, `time`, state, info 
+  FROM information_schema.PROCESSLIST
+  WHERE TIME &amp;gt;= 60;
+
+
+分析执行计划
+EXPLAIN
+在获取到耗时较长的sql或我们刚写sql性能如何的时候，我们可以使用 explain + SQL 来输出sql的执行计划。
+
+执行某条sql输出的执行计划示例：
+
+可以看出执行计划有很多列，这里给出各个列的大致解释：
+
+id：sql执行的顺序。id的值为一个数字或null。当id为一个数字的时候，表示查询执行的顺序；当id为null时，表示此行数据是由其他查询通过union出来的结果集。id值相同时，由上到下执行，id值不同，由大到小执行。
+select_type：查询类型，可选的值有：
+
+SIMPLE：不包含子查询或是UNION操作的查询，多表JOIN也是SIMPLE；
+PRIMARY：查询中如果包含任何子查询，那么最外层的查询则被标记为PRIMARY；
+SUBQUERY：SELECT列表中的子查询；
+DEPENDENT SUBQUERY：依赖外部结果的子查询；
+UNION：union操作的第二个或是之后的查询的值为union；
+DEPENDENT UNION：当union做为子查询时，第二个或第二个后的查询的select_type值；
+UNION RESULT：UNION产生的结果集；
+DERIVED：出现在FROM子句中的子查询。
+
+
+table：指明从哪个表中获取数据。&amp;lt;unionM,N&amp;gt;由id为M和N查询union产生的结果集。&amp;lt;derived N&amp;gt;/&amp;lt;subquery N&amp;gt; 由id为n的查询产生的结果。
+partitions：对于分区表，显示查询的分区id；对于非分区表，显示NULL；
+type：索引使用的类型。
+
+possible_keys：查询中可能会用到的索引；
+key：查询是实际用到的索引；
+key_len：实际使用索引的最大长度，由字段长度决定的；
+ref：表示哪些列或常量被用于索引查找；
+rows：根据统计信息预估的扫描的行数；
+filtered：表示返回结果的行数占需读取行数的百分比；
+extra：sql查询的一些额外的信息，可能显示的如下
+
+distinct：优化distinct操作，在找到第一匹配的元组后即停止；
+not exists：使用not exists来优化查询；
+using filesort：使用文件来进行排序，通常会出现在order by或group by查询中；
+using index：使用了覆盖索引进行查询；
+using temporary：MySQL需要使用临时表来处理查询，常见于排序，子查询和分组查询；
+using where：需要在MySQL服务器层使用where条件来过滤数据；
+select tables optimized away：直接通过索引来获得数据，不用访问表。
+
+
+
+SHOW PROFILES
+进行更细致的SQL性能分析。
+select @@have_profiling;    # 查看是否支持profile功能
+select @@profiling; # 查看是否开启profile功能
+set @@prfiling=1;   # 开启profile功能
+set profiling_history_size=100; # 设置profiling处理的sql数量，默认15条
+show profiles;
+show profile for [all] query &amp;lt;id&amp;gt;;    # 查询指定id的sql执行详情
+
+optimizer trace
+如何优化sql
+可以从优化sql查询所涉及到的表中的索引或改写sql以达到更好的利用索引的目的。索引可以告诉存储引擎如何快速的查询到所需要的数据。
+索引的数据结构：
+
+B树
+
+
+根节点的子节点个数：2&amp;lt;=x&amp;lt;=m，m是树的阶；
+中间节点的子节点个数：m/2 &amp;lt;= y&amp;lt;= m；
+每个中间节点包含n个关键字，n=子节点个数-1且按升序排序
+在关键字节点的左子树都是小于关键字的，右子树都是大于关键字的。
+
+
+B+树
+
+
+有n个子节点的节点中含有n个关键字；
+叶子节点包含了所有关键字的信息，且关键字自小到大排序，形成一个有序链表；
+非叶子节点只保存索引，叶子节点保存索引和数据。
+
+
+B树与B+树
+
+B+树相对矮胖；
+B树可以直接在非叶子节点上获取数据，B+树需要到叶子节点上才能获取数据；
+B+树可以在范围查询的时候，在查询到某叶子节点后按链表向后遍历，效率会更高。
+
+
+
+InnoDB的存储方式：
+
+B+树
+主键索引：叶子节点存储主键和数据
+非主键索引（二级索引、辅助索引）：叶子节点存储索引以及主键
+
+MyISAM存储方式：
+
+B+树
+主键/非主键索引的叶子都是存储指向数据块的指针
+
+InnoDB支持的索引类型有：
+
+Btree索引：平常使用中，如果没有说明索引的类型，一般都是Btree索引；
+
+使用B+树的结构存储索引数据；
+适用于前缀查询
+适用于全值匹配的查询
+
+class_name = &#39;mysql&#39; 或 class_name in (&#39;mysql&#39;, &#39;postgreSQL&#39;)
+
+
+适合处理范围查找
+
+study_cnt between 1000 and 3000 或 study_cnt &amp;gt; 3000
+
+
+Btree索引的从索引的最左侧开始匹配查找列
+
+
+自适应Hash索引：为优化查询性能自动建立的，不需要开发人员或DBA手动管理；Hash索引的性能会比B树好些，但是Hash索引不是按照索引值排序，所以不可使用排序。也不支持部分索引列匹配查询，只支持等值查询，不支持范围查询，模糊查询。Hash冲突越严重，性能下降越厉害。
+
+innodb_adaptive_hash_index
+为什么用 B+ 树做索引而不用哈希表做索引?
+
+哈希表是把索引字段映射成对应的哈希码然后再存放在对应的位置，这样的话，如果我们要进行模糊查找的话，显然哈希表这种结构是不支持的，只能遍历这个表。而B+树则可以通过最左前缀原则快速找到对应的数据。
+如果我们要进行范围查找，例如查找ID为100 ~ 400的人，哈希表同样不支持，只能遍历全表
+索引字段通过哈希映射成哈希码，如果很多字段都刚好映射到相同值的哈希码的话，那么形成的索引结构将会是一条很长的链表，这样的话，查找的时间就会大大增加。
+
+
+
+全文索引：使用elasticsearch或solr
+空间索引：存储GIS数据，地理位置的索引（不推荐）
+
+应该在什么列上建立索引？
+
+在where子句中的列，这些列是否有比较好的筛选性（列值的重复越小的，筛选性越好）
+包含在ORDER BY、GROUP BY、DISTINCT中的字段
+多表JOIN的关联列
+
+创建索引：create index idx_xx ON table_name(column_name)
+查看索引：show index from table_name
+删除索引：alter table table_name drop index idx_xx
+
+
+
+如何选择符合索引键的顺序？
+
+区分度最高的列放在联合索引的最左侧
+使用最频繁的列放到联合索引的最左侧
+尽量把字段长度小的列放在联合索引列的最左侧
+
+Btree索引的限制：
+
+只能从最左侧开始按索引键的顺序使用索引，不能跳过索引键
+NOT IN和&amp;lt;&amp;gt;操作无法使用索引
+索引列上不能使用表达式或者函数
+
+索引并非越多越好，索引可以提高查询效率，也会降低插入和更新的效率。使用IN查询是可以用到索引，但是IN查询列表很大，mysql引擎会认为使用全表扫描的效率更高而放弃使用索引。查询过滤的顺序也不必与索引键顺序相同才可以使用到索引，mysql引擎会自动调整顺序以适应索引顺序从而使用到索引。
+改写SQL
+改写SQL的原则：
+
+使用outer join代替not in（MySQL8.0会自动转换）
+使用CTE代替子查询
+拆分复杂的大SQL为多个简单的小SQL
+使用计算列优化查询# 可以生成一个total_score计算列。为计算列添加索引，可优化查询速度。
+  alter table imc_classvalue add column total_score DECIMAL(3,1) as (content_score + level_score + logic_score) 
+
+
+
+JOIN语句的优化
+JOIN的类型有：
+
+JOIN的算法：
+
+Nested Loop Join（NLJ）
+Block Nested Loop Join（BNLJ）：使用join buffer降低对一张表的扫描次数，可以使用 join_buffer_size调整join_buffer大小；每个能被缓存的join都会分配一个join buffer，一个查询可能拥有多个join buffer。join buffer在执行连接之前会分配，在查询完成之后释放。但需要满足以下条件：
+
+连接类型是ALL，index或是range；
+第一个nonconst table不会分配join buffe，即使类型是all或index；
+join buffer只会缓存需要的字段，非整行数据；
+
+
+Batched Key Access Join（BKA）：mysql5.6，基于Multi Range Read（MRR）。
+
+MRR核心：将随机IO转换成顺序IO，从而提升性能。
+MRR参数：
+- optimizer_switch的子参数
+- mrr：是否开启mrr，on开启，off关闭
+- mrr_cost_based：表示是否要开启基于成本计算的MRR
+- batched_key_access：
+- read_rnd_buffer_size：指定mrr缓存大小
+
+
+Hash Join：mysql8.0.18，当限制会比较多，在mysql8.0.20限制会比较少，建议在8.0.20上使用。用来代替BNLJ。为较小的表在内存中构建一个hash表，然后去扫描大表，扫描的过程中查询hash表是否满足条件。
+
+JOIN调优原则：
+
+小表驱动大表（优化器会自动执行，也可以使用 straight_join 指定驱动表）；
+如果where条件，应当要能够使用索引，并尽可能地减少外层循环的数据量；
+join的字段尽量创建索引；
+尽量减少扫描的行数（限制在百万内）；
+参与join的表不要太多（不超过3张）；
+如果被驱动表的join字段用不了索引，且内存较为充足，可以考虑join buffer设置的大一些。
+
+JOIN调优原则：
+
+小表驱动大表（优化器会自动执行，也可以使用 straight_join 指定驱动表）；
+如果where条件，应当要能够使用索引，并尽可能地减少外层循环的数据量；
+join的字段尽量创建索引；
+尽量减少扫描的行数（限制在百万内）；
+参与join的表不要太多（不超过3张）；
+如果被驱动表的join字段用不了索引，且内存较为充足，可以考虑join buffer设置的大一些。
+
+分页查询优化
+
+使用覆盖索引
+使用覆盖索引 &amp;amp; join
+使用覆盖索引 &amp;amp; 子查询
+范围查询 &amp;amp; limit语句
+如果可以获取起始主键值和结束主键值，可以改成between...and
+禁止过大页码
+
+COUNT优化
+一些关于count的结论：
+
+count(*)和count(1)是一样的；
+count(*)会选择最小的非主键索引，如果不存在任何非主键索引，则会使用主键；
+count(*)不会排除null行，而count(字段)会排除；
+如果没有特殊需求，尽量count(*)。
+
+优化建议：
+
+mysql8.0.13会针对无条件的count语句去优化
+使用更小的非主键索引
+把数据库引擎切换成MyISAM
+使用并维护一张汇总表，
+使用sql_calc_found_rows，未来会被废弃
+使用缓存
+查询information_schema.tables，估算值
+show table status where name = &#39;user&#39;，估算值
+explain select * from salaries，估算值
+
+ORDER BY优化
+MySQL的排序模式
+
+
+rowid排序（常规排序）
+
+过程
+
+从表中获取满足where条件的记录；
+对于每条记录，将记录的主键即排序键（id、order_column）取出放入sort buffer（sort_buffer_size）；
+如果sort buffer能存放所有满足条件的id、order_column，则进行排序；否则sort buffer满后，排序并写到临时文件。快排算法；
+若排序中产生了临时文件，需要利用归并排序算法，从而保证记录有序；
+循环执行上述过程，知道所有满足条件的记录全部参与排序；
+扫描排好序的id、order_colum对，并利用id去取select需要返回的其他字段；
+返回结果集
+
+
+特点
+
+如果sort buffer不能存放结果集里面的所有id、order_column，会产生临时文件
+一次排序需要两次IO。
+
+第二步：把id、order_column放入sort_buffer；第六步：通过id去获取需要返回的其他字段。由于返回结果是按照order_column排序的，所以id是乱序的，会存在随机io的问题。MySQL内部针对这种情况做了优化。在用id取数据之前，会按照id排序并放到一个缓存里面，这个缓存大小由read_rnd_buffer_size 控制，接着再去记录，从而把随机io转换成顺序io。
+
+
+
+
+
+
+
+全字段排序（优化排序）
+直接取出SQL中需要的所有的字段，放到sort buffer中。由于sort buffer已经包含了查询需要的所有字段，因此在sort buffer中排序完成后可直接返回。
+相对于rowid排序，全字段排序的优缺点有：
+
+性能提升，无需两次io；
+一行数据占用的空间回比rowid排序的要多，更容易导致临时文件。
+
+
+
+rowid和全字段是如何选择的？
+当order by SQL中出现字段的总长度小于配置项 max_length_for_sort_data ，会使用全字段排序，否则使用rowid排序。
+
+
+打包字段排序
+MySQL5.7引入，全字段模式的优化，工作原理一样，但是将字段紧密地排列在一起，而不是使用固定长度空间。
+
+
+如何调优order by：
+
+利用索引，防止filesort发生
+如果发生filesort，并且没法避免，需要优化filesort
+
+调大sort_buffer_size，减少/避免临时文件和归并操作
+
+optimizer trace中 num_initial_chunks_spilled_to_disk的值
+sort_merge_passess变量的值
+
+
+调大 read_rnd_buffer_size，让一次顺序io返回的结果更多
+设置合理的 max_length_for_sort_data 的值（一般不调整）
+调小 max_sort_length，即排序时最多取多少字节
+
+
+
+GROUP BY优化
+MySQL有如下处理group by语句的方式，性能一次递减：
+
+松散索引扫描（Loose Index Scan）
+无需扫描满足条件的所有索引键即可返回结果。在explain语句的extra中会显示 using index for group by。但是sql需要满足：查询是作用在单张表上的，GROUP BY指定的所有字段要符合最左前缀原则，而且没有其他字段。如果存在聚合函数，只支持min()/max()，并且如果同时使用了min()和max()，则必须作用于同一个字段。聚合函数作用的字段必须在索引中，并且紧跟GROUP BY所指定的字段。如果查询中存在除GROUP BY指定的列以外的其他部分，则必须以常量的形式出现。
+紧凑索引扫描（Tight Index Scan）
+临时表（Temporary table）
+
+表设计的优化
+
+
+表属性尽量不要设置为NULL。
+NULL是默认行为，如果不指定列字段为NOT NULL的，那么它就是NULL的。NULL并非不占用存储空间，反而需要MySQL需要额外的存储空间和逻辑处理，而且对于可为null的索引列，其使用和统计都会更加复杂。NULL参与的查询是需要使用IS NULL/IS NOT NULL作为条件的；当索引为NULL的值作为条件时，这个sql不会用到索引，NULL参与的计算，其结果都为NULL，聚合查询的结果都会忽略值NULL的记录；在排序中NULL值所在列也会排在最前面。
+
+
+不随意设置数据类型
+创建表时要指定主键，主键不应该具有业务含义。虽然MySQL允许创建表时不指定主键，但是在表中没有非空整型唯一索引的时候InnoDB会自动添加隐式主键。
+选择合适的数据类型和恰当的取值范围。使用存储所需的最小数据类型；选择简单的数据类型；存储小数直接选择decimal；尽量避免使用text和blob。
+不建议使用枚举ENUM类型。枚举类型的值都是从允许值列表中选择的，这个列表在创建表结构就定义好了。枚举的优点是：枚举存储是数字，数据会更加紧凑；允许值提前定义，MySQL可以检查出数据的正确性。查询枚举列值的时候，默认显示的是枚举的值，如果想查询枚举的索引，需要给列加0。比如select name, gender from user; 可以查出枚举列gender的枚举值，而 select name, gender + 0 from user; 可以查出枚举列gender的枚举索引。使用枚举同样需要注意：
+
+对枚举列使用sum、avg等聚合函数的时候，会使用枚举列的索引。因为聚合函数的参数是数字；
+对枚举列排序的时候，是根据其索引排序的；如果要按值排序，需要使用concat函数；
+如果将数据存储到ENUM列中，则将数字视为可能值得索引，存储的值是具有该索引的枚举成员。如果存储的是字符串的数字，MySQL会先转成数值类型，去匹配索引序号。
+
+
+
+正确的使用索引。
+字符串类型的查询的时候没有使用引号，是不会使用索引的。where条件左边的字段参与了函数或数学运算，不会使用索引；联合索引最左前缀顺序不匹配，不使用索引。
+不再使用的索引需要及时删除，否则MySQL需要维护索引，浪费空间和性能。为选择性低的列创建索引意义不大。列值过长，可以选择部分前缀作为索引，而不是整列加上索引。表记录不超过1000行，不需要创建索引。一张表的索引不要超过5个。
+
+select count(distinct(concat(first_name, left(last_name, 3))))/count(*) from user;  # 查询出的值越接近1，代表选择性越好
+
+
+
+其他地方的优化
+
+
+MySQL连接设置
+MySQL默认的连接超时是8小时(28800秒)，对应的配置参数是 wait_timeout。一般在连接的参数配置做自动重连。
+
+jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;amp;chararchterEncoding=utf8&amp;amp;autoReconnect=true
+
+但是autoReconnect是有副作用的。原有连接上的事务将会被回滚，连接中持有的表将会全部释放，连接关联的会话session将会丢失，连接中定义的用户变量将会丢失，连接中定义的预编译SQL将会丢失。可以修改MySQL配置，避免断开连接。
+
+[mysqld]
+wait_timeout = 288000
+interactive_timeout = 28800
+
+连接池的配置同样也会影响连接，如HikariCP配置：
+
+maximum-pool-size：最大连接数目。超过这个数目，新的数据库访问线程会被阻塞。推荐大小为cpu核心数*2+硬盘数；
+minimum-idle：最小连接数目；
+max-lifetime：最大连接生命时间，用来设置一个connection在连接池中的存活时间；
+idle-timeout：一个链接idle状态的最大时长，超时则被释放。
+
+
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/WZxqM5YDi/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/2mvyKxMdI/">
+                        MySQL8.0的新特性
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-11-07</time>
+                    
+                        <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-success">
+            #mysql
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/2mvyKxMdI/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/mysql8.png) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            MySQL8.0提供了一些实用的功能特性，这里会一一举例介绍。
+通用表达式（Common Table Expressions）
+CTE会生成临时表，但只会在查询期间有效，这个临时表在这个查询中可以多次引用和自引用。它的语法：
+
+这个特性会比较适合写一些表中存在递归场景的查询，如：
+    # CTE递归生成序列
+    WITH RECURSIVE test(n) AS (
+        SELECT 1 AS n
+        UNION ALL
+        SELECT 1+n FROM test WHERE n &amp;lt; 10
+    )
+    SELECT * FROM test
+
+窗口函数
+提供了更方便的统计功能，语法如下：
+
+其中funcation_name可以是以下的函数：
+
+
+
+函数名
+说明
+
+
+
+
+聚合函数
+聚合函数都可以作为窗口函数使用
+
+
+ROW_NUMBER()
+返回窗口分区内数据的行号
+
+
+RANK()
+类似于row_number，只是对于相同数据会产生重复的行号，之后的数据行号会产生间隔
+
+
+DENSE_RANK()
+类似于rank，区别在于当组内某行数据重复时，虽然行号会重复，当后续的行号不会产生间隔
+
+
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/2mvyKxMdI/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/mysql-shi-bei/">
+                        MySQL拾贝
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-11-06</time>
+                    
+                        <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-other_1">
+            #mysql
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/mysql-shi-bei/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107012431.png) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            MySQL是一款非常流行，免费高性能的数据库。但是在对了解MySQl之前，需要先了解一下数据库的基本概念，这在数据库领域是通识的。接着是对MySQL的一些基础做一下简单的介绍。再着就是MySQL的高级部分了，有索引优化，MySQL版本以及服务器的配置等介绍。
+什么是数据库
+数据库（Database），顾名思义，就是一个存储数据的仓库，本质上还是一个文件系统。但，它会按照特定的格式将数据存储起来，方便我们对数据库中的数据进行增加、删除、修改和查询等操作。
+计算机中主要有两个地方可以存储数据。一个是内存，一个是磁盘。数据存储在内存中会有这样明显的有点：存储和访问的速度很快，但是在断电和程序结束时，数据就会被清空。而且内存相对于磁盘来说，容量比较小，价格贵。把数据存储到磁盘上，是可以永久保存下去的，但是操作数据的速度就远没有存储在内存中那么快了。存储在内存或磁盘都是有各自的优点的，我们可以利用内存快的优点来存储一些访问频繁的数据，而不活跃的数据可以放到磁盘中。重要的数据还是要存储在磁盘中的。
+数据库的类型
+现代的数据库主要有两类：关系型和非关系型。他们的区别可以相比较着来看：
+
+
+
+
+关系型
+非关系型
+
+
+
+
+结构上
+数据存储在二维表中
+数据存储的时候没有固定的结构
+
+
+事务上
+支持事务的ACID
+对事务的支持较弱，但是对数据的并发处理性能好
+
+
+SQL支持
+支持SQL
+不支持SQL
+
+
+总结
+适合使用在数据存在一定关系，需要关联查询，需要事务支持和SQL的场景
+适合对数据结构灵活，不需要事务，要求读写并发的场景
+
+
+
+MySQL安装
+由于数据库一般都是放在linux上面的，这里就装在linux系统上面了，用的是centos7。首先要去官网下载安装，地址：https://downloads.mysql.com/archives/get/p/23/file/mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz。然后上传到linux服务器上，我这里是放到opt目录下的，安装的具体步骤如下：
+
+
+首先要解压文件，设置用户
+# 进入opt目录
+cd /opt
+# 解压文件
+tar -xvJf mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz
+# 名字过长，重命名并移动到/usr/local下
+mv mysql-8.0.20-linux-glibc2.12-x86_64 /usr/local/mysql-8.0.20
+# 给mysql创建一个专用的帐户，最好也设置密码
+useradd mysql
+passwd mysql
+
+
+
+添加配置
+# 修改配置文件
+vi /etc/my.cnf
+
+配置文件的内容如下
+
+[client]
+port=3306
+socket=/usr/local/mysql-8.0.20/mysql.sock
+default-character-set=utf8mb4
+[mysqld]
+port=3306
+user=mysql
+socket=/usr/local/mysql-8.0.20/mysql.sock
+basedir=/usr/local/mysql-8.0.20
+datadir=/usr/local/mysql-8.0.20/data
+character-set-server=utf8mb4
+[mysqld_safe]
+log-error=/usr/local/mysql-8.0.20/data/mysql-error.log
+pid-file=/usr/local/mysql-8.0.20/data/mysql.pid
+
+根据配置文件的 datadir 项，创建一个data目录
+mkdir data
+
+修改mysql软件的目录的所属者
+chown -R mysql.mysql /usr/local/mysql-8.0.20
+
+
+
+运行和修改MySQL
+初始化mysql
+/usr/local/mysql-8.0.20/bin/mysqld  --initialize-insecure --user=mysql --basedir=/usr/local/mysql-8.0.20 --datadir=/usr/local/mysql-8.0.20/data/
+
+拷贝启动文件
+cp /usr/local/mysql-8.0.20/support-files/mysql.server /etc/init.d/mysqld
+
+启动并连接mysql
+service mysqld start
+/usr/local/mysql-8.0.20/bin/mysql -uroot -p
+
+进入mysql后，一定要先修改密码
+# 将root帐户的密码设置成root
+alter user &#39;root&#39;@&#39;localhost&#39; identified by &#39;root&#39;;
+
+此时也可以创建用户
+# 创建daff@localhost用户，密码是daff
+create user &#39;daff&#39;@&#39;localhost&#39; identified by &#39;daff&#39;;
+# 给daff@localhost授予所有数据库的所有表的所有权限
+grant all privileges on *.* to &#39;daff&#39;@&#39;localhost&#39;;
+# 刷新权限，使得用户的权限生效
+flush privileges;
+
+修改root用户可远程连接，对于所有要远程连接的帐户，都需要这样设置
+# 在所有的机器上都可以使用root身份连接过来
+update mysql.user set host = &#39;%&#39; where user = &#39;root&#39;;
+# 设置远程连接的密码，使用mysql_native_password是为了和很多的数据库客户端兼容
+alter user &#39;root&#39;@&#39;%&#39; identified with mysql_native_password by &#39;root&#39;;
+
+
+如果远程客户端连接不上mysql，需要检查一下防火墙是否关闭或端口是否开放。
+
+
+
+MySQL常见的存储引擎
+MySQL支持多种存储引擎，具体如下：
+
+
+
+引擎名称
+事务
+说明
+
+
+
+
+InnoDB
+Y
+事务型存储引擎
+
+
+MyISAM
+N
+MySQL5.6之前的默认引擎，最常用的非事务型存储引擎
+
+
+CSV
+N
+以CSV格式存储的非事务型存储引擎
+
+
+Archive
+N
+只允许查询和新增数据而不允许修改的非事务型存储引擎，占用空间小
+
+
+Memory
+N
+一种易失性非事务型存储引擎
+
+
+
+但常用的只有InnoDB和MyISAM。最重要的还是InnoDB，再来具体看看这种存储引擎的特点：
+
+支持ACID；
+数据按主键聚集存储；
+支持行级锁和MVCC（多版本并发控制，进一步避免读写操作的阻塞）；
+支持BTree和自适应Hash索引；
+支持全文和空间索引（最好不用）。
+
+MySQL的数据类型
+存储在MySQL中的数据主要又三种类型：数值类型、日期时间类型和字符串类型。
+
+
+
+在创建数据库表的时候，需要认真考虑名称以及字段的类型，一般我们有以下的原则来作为指导：
+
+为数据选择合适的数据类型
+
+优先选择符合存储数据需要的最小数据类型
+谨慎使用ENUM和TEXT，这会影响到查询的性能，如果要使用，最好独立成一张表。text类型的列不要有默认值。
+财务相关的数值类型，必须使用decimal。
+
+
+为表和列选择合适的名字
+
+所有数据库对象名称必须使用小写字母，可使用下划线分割；
+所有数据库对象名称定义禁止使用MySQL保留关键字；
+数据对象的命名需要做到见名知义，最好不要超过32个字符；
+临时库表需要以tmp为前缀，日期为后缀；
+备份库表以bak为前缀，日期为后缀
+
+
+
+SQL常用语法
+表结构相关的操作
+
+创建表
+
+修改表
+
+删除表
+
+查看表结构desc tb_name;
+# 查看表的ddl
+show create table tb_name;
+
+
+单表约束
+
+主键约束：primary key
+唯一约束：unique
+非空约束：not null
+默认约束：default
+
+
+
+表数据相关的操作
+
+新增数据
+
+删除数据
+
+修改数据
+
+查询数据
+
+表的复制# 复制表结构
+create table new_tb_name like old_tb_name;
+# 复制表结构和数据
+create table new_tb_name select * from old_tb_name;
+
+
+视图
+视图是一个逻辑的存储结构，也可以看出一张虚拟的表。可以像查询表一样查询视图。视图本身不存储数据。创建视图语法：CREATE VIEW view_name
+AS SELECT [ALL | DISTINCT | DISTINCTROW]
+select_expr [, select_expr ...]
+[FROM table_references]
+[WHERE where_condition]
+
+
+
+系统函数
+MySQL提供了丰富的函数来处理数据，以下会罗列一些比较常用的函数。
+时间函数
+
+
+
+函数名
+说明
+
+
+
+
+CURDATE()/CURTIME()
+返回当前日期/返回当前时间
+
+
+NOW()
+返回当前的日期和时间
+
+
+DATE_FORMAT(date, fmt)
+按照fmt的格式，对日期date进行格式化
+
+
+SEC_TO_TIME(seconds)
+把秒数转换成时间（小时：分：秒）
+
+
+TIME_TO_SEC(seconds)
+把时间（小时：分：秒）转换成秒数
+
+
+DATEDIFF(date1,date2)
+返回date1和date2相差的天数
+
+
+DATE_ADD(date, INTERVAL expr unit)
+对给定的日期增加或减少指定的时间单元（unit:DAY/HOUR/MINUTS/SECOND）
+
+
+EXTRACT(unit FROM date)
+返回日期date的指定部分
+
+
+
+示例：
+SELECT DATE_FORMAT(NOW(), &#39;%Y / %m / %d  %H : %i : %s&#39;); # 按格式输出 2020 / 10 / 22  05 : 38 : 43
+SELECT SEC_TO_TIME(60) # 输出 00:01:00
+SELECT TIME_TO_SEC(&#39;1:00:00&#39;) # 输出 3600
+
+SELECT NOW(),
+    DATE_ADD(NOW(), INTERVAL 1 DAY), # 当前时间加一天
+    DATE_ADD(NOW(), INTERVAL 1 YEAR),  # 当前时间加一年
+    DATE_ADD(NOW(), INTERVAL -1 DAY), # 当前时间减一天
+    DATE_ADD(NOW(), INTERVAL &#39;-1:30&#39; HOUR_MINUTE); # 当前时间减1.5h
+    
+SELECT EXTRACT(YEAR FROM now()) # 提取当前日期的年份
+
+字符串函数
+
+
+
+函数名
+说明
+
+
+
+
+CONCAT(str1, str2, ...)
+把字符串str1，str2等连接成一个字符串
+
+
+CONCAT_WS(sep, str1, str2, ...)
+用指定的分隔符sep连接字符串
+
+
+CHAR_LENGTH(str)
+返回字符串str的字符个数（1个字符=3个字节）
+
+
+LENGTH(str)
+返回字符串str的字节个数
+
+
+FORMAT(X, D [, locale])
+将数字N格式化
+
+
+LEFT(str, len) / RIGHT(str, len)
+从字符串的左/右起返回len长度的子字符串
+
+
+SUBSTRING(str, pos[, len])
+从字符串str的pos位置起返回长度为len的子串
+
+
+SUBSTRING_INDEX(str, delim, count)
+返回字符串str按delim分隔的前count个子字符串
+
+
+LOCATE(substr, str)
+在字符串str中返回子串substr第一次出现的位置
+
+
+TRIM([remstr FROM] str)
+删除字符串str两端的指定的remstr
+
+
+
+示例：
+SELECT CONCAT_WS(&#39;-&#39;, class_name, title) FROM course;
+SELECT FORMAT(1234.567, 4); # 输出 1,234.5670
+SELECT SUBSTRING_INDEX(&#39;192.168.1.1&#39;, &#39;.&#39;, -2) # 输出 0.100
+SELECT SUBSTRING(&#39;HELLO,WORLD&#39;, 1, LOCATE(&#39;,&#39;, &#39;HELLO,WORLD&#39;) - 1); # 输出 HELLO
+SELECT TRIM(&#39;  A   &#39;); # 输出：A
+SELECT TRIM(&#39;B&#39; FROM &#39;BBBABBB&amp;quot;); # 输出：A
+
+其他
+
+
+
+函数名
+说明
+
+
+
+
+ROUND(X, D)
+对数值X进行四舍五入保留D为小数
+
+
+RAND()
+返回一个在0和1之间的随机数，使用在随机排序中时，性能会很差
+
+
+CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...] [ELSE result] END
+case when
+
+
+MD5(str)
+返回str的MD5值
+
+
+
+示例：
+SELECT user_name, 
+CASE WHEN gender = 1 THEN &#39;男&#39;
+WHEN gender = 0 THEN &#39;女&#39; ELSE &#39;未知&#39;
+END AS &#39;性别&#39;
+FROM user_things
+
+# 随机获取10条数据
+SELECT course_id FROM course
+ORDER BY RAND() LIMIT 10
+
+事务与并发控制
+事务是数据库执行操作的最小的逻辑单元，事务可以由一个或多个SQL组成，这些事务的要么全部执行成功，要么全部执行失败。
+
+事务的特性
+
+并发问题
+
+脏读：一个事务读取了另一个事务未提交的数据；
+不可重复读：一个事务前后的两次读取，数据不一致；
+幻读：一个事务两次查询的结果集记录数不一致。
+
+InnoDB的隔离级别，默认是RR
+
+查看事务的隔离级别
+show variables like &#39;%iso%&#39;;
+
+设置事务的隔离级别
+
+InnoDB中的锁
+
+查询需要对资源加共享锁（S）
+数据修改需要对资源加排他锁（X）
+
+
+阻塞和死锁
+
+
+阻塞：由于不同锁之间的兼容关系，造成的一个事务需要等待另一个事务释放其所占用的资源的现象。
+# 使用以下SQL可以查找出，阻塞超过30s的线程
+ SELECT waiting_pid as &#39;被阻塞的线程&#39;，
+        waiting_query as &#39;被阻塞的SQL&#39;，
+        blocking_pid as &#39;阻塞线程&#39;,
+        wait_age as &#39;阻塞时间&#39;,
+        sql_kill_blocking_query as &#39;建议操作&#39;
+ FROM sys.innodb_lock_waits
+ WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(wait_started)) &amp;gt; 30
+
+出现阻塞时，可以手动杀掉占用资源的事务（kill query connection_id），当最好的办法是优化占用资源事务的SQL，使其尽快释放资源。
+
+
+死锁：并行执行的多个事务相互占用对方所需要的资源。
+# 把死锁记录到mysql的错误日志中
+ set global innodb_print_all_deadlocks=on;
+
+
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/mysql-shi-bei/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://daffupman.github.io/images/avatar.png?v=1634906345588)">
+        </div>
+        <h1 class="id_card-title">
+            
+        </h1>
+        <h2 class="id_card-description">
+            
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>

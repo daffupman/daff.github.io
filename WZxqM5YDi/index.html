@@ -1,0 +1,689 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    MySQL的索引及优化 | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            MySQL的索引及优化
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2020-11-07</time>
+                            
+                                <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-">
+                            #mysql
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://for-markdown.oss-cn-shanghai.aliyuncs.com/160e88b159fd464b9daa567059476e1b.jpg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>对于MySQL来说，可以使用sql语句查询出我们需要的数据，这是最基本的功能。在表中数据量比较小的情况下，SQL的性能差异并不明显，但是在表数据量比较大的时候，SQL执行的效率就有明显的时间差异。这里会记录我们如何发现SQL的性能问题，如何优化SQL以及优化的底层原理。</p>
+<h2 id="sql优化">SQL优化</h2>
+<h3 id="索引">索引</h3>
+<h4 id="主键索引和非主键索引">主键索引和非主键索引</h4>
+<p>非主键索引的叶子节点存放的是主键的值，而主键索引的叶子节点存放的是整行数据。非主键索引也被称为二级索引，而主键索引也被称为聚簇索引。</p>
+<p>如果条件查询使用的是主键索引，那么直接冲索引树上获取整行数据，而条件查询的非主键索引，那么需要从节点上获取主键值，然后再去主键索引树上获取完整的数据。即会发生回表操作。</p>
+<p>聚集索引表示表中存储的数据按照索引的顺序存储，检索效率比非聚集索引高，但对数据更新影响较大。非聚集索引表示数据存储在一个地方，索引存储在另一个地方，索引带有指针指向数据的存储位置。非聚集索引检索效率比聚集索引低，但对数据更新影响较小。</p>
+<p>使用主键自增的索引，可以避免B+树重新排序和页分裂操作。</p>
+<h3 id="测试数据准备">测试数据准备</h3>
+<ul>
+<li>测试数据文件：<code>https://github.com/datacharmer/test_db</code></li>
+<li>导入数据<pre><code class="language-bash">mysql -uroot -proot &lt; employees.sql
+</code></pre>
+</li>
+<li>测试数据导入是否成功<pre><code class="language-bash">mysql -uroot -proot -t &lt; test_employees_md5.sql
+</code></pre>
+</li>
+</ul>
+<h3 id="如何找出效率低的sql">如何找出效率低的SQL</h3>
+<p>要解决SQL效率低的问题就是如何发现哪些SQL导致了执行效率。常用的方法就是 <code>打开慢查询日志</code> ，命令行方式如下：</p>
+<pre><code class="language-bash"># 开启/关闭慢查询日志，默认off
+set global slow_query_log = ON/OFF
+# 设置慢查询日志的输出位置
+set global slow_query_log_file = log/slow_query.log
+# 设置慢查询的时间阀值，默认10秒，需要重新打开会话可见。测试的时候一般设置成1秒
+set global long_query_time = 1
+# 开启/关闭 记录没有使用索引的sql
+set global log_queries_not_using_indexes = ON/OFF
+</code></pre>
+<p>配置文件方式如下（需要重启）：</p>
+<pre><code class="language-bash">[mysqld]
+log_output='FILE,TABLE'
+slow_query_log=ON
+long_query_time=0.001
+slow_query_log_file=log/slow_query.log
+</code></pre>
+<blockquote>
+<p>其他相关参数与默认值<br>
+log_output：日志输出的地方。默认FILE，即文件。可以设成TABLE，则日志记录到mysql.slow_log中。也可以设置多种格式，如：FILE，TABLE。<br>
+long_query_time：执行时间超过多久记录到慢查询日志，单位秒，默认10。<br>
+log_queries_not_using_indexes：是否要将未使用索引的SQL记录到慢查询日志中，默认OFF。建议在开发环境开启，生产环境打开。<br>
+log_throttle_queries_not_using_indexes：log_queries_not_using_indexes配置项开启生效，用于限制每分钟写入没有使用慢sql的数量，默认0。<br>
+min_examined_row_limit：扫描行数至少达到多少行会记录到慢查询日志，默认0。<br>
+log_slow_amdin_statements：是否要记录管理语句，默认关闭。管理语句包括：alter table，analyze table，check table，create index，drop index，optimize table，repair table。默认off。<br>
+slow_query_log_file：指定慢查询日志文件路径，默认/var。<br>
+log_slow_slave_statements：该参数在从库上设置，决定是否记录在复制过程中超过long_query_time的SQL，如果binlog格式是row，则改参数无效。<br>
+log_slow_extra：当log_output=FILE，是否要记录额外信息（MySQL8.0.14），对log_output=TABLE无影响。</p>
+</blockquote>
+<p>这样所有的慢查询sql都会记录到 <code>log/slow_query.log</code> 文件里了。我们可以直接阅读文件里的内容，来分析sql的执行问题。但是一般都是借助工具来分析，主要有两种工具：</p>
+<ul>
+<li>mysql的官方工具 <code>mysqldumpslow</code>，使用命令：<pre><code class="language-bash">mysqldumpslow [OPTS...][LOGS...]
+</code></pre>
+示例：
+<blockquote>
+<p>mysqldumpslow -s t -t 10 -a db-slow.log</p>
+</blockquote>
+</li>
+<li>percona工具，这是第三方的，需要先下载(https://www.percona.com/downloads/percona-toolkit/3.2.1/binary/redhat/7/x86_64/percona-toolkit-3.2.1-1.el7.x86_64.rpm)：<pre><code class="language-bash">yum install -y perl-DBD-MySQL.x86_64 perl-DBI.x86 perl-Time-HiRes.x86_64 perl-IO-Socket-SSL.noarch perl-TermReadKey.x86_64 perl-Digest-MD5
+rpm -ivh percona-toolkit-3.2.1-1.el7.x86_64.rpm
+</code></pre>
+</li>
+</ul>
+<blockquote>
+<p>数据库实时监控sql语句：</p>
+<pre><code class="language-mysql">  SELECT id, `user`, `host`, DB, command, `time`, state, info 
+  FROM information_schema.PROCESSLIST
+  WHERE TIME &gt;= 60;
+</code></pre>
+</blockquote>
+<h3 id="分析执行计划">分析执行计划</h3>
+<h4 id="explain">EXPLAIN</h4>
+<p>在获取到耗时较长的sql或我们刚写sql性能如何的时候，我们可以使用 <code>explain + SQL</code> 来输出sql的执行计划。<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201022224740.png" alt="explain语法" loading="lazy"><br>
+执行某条sql输出的执行计划示例：<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201025213701.png" alt="示例执行计划" loading="lazy"><br>
+可以看出执行计划有很多列，这里给出各个列的大致解释：</p>
+<ul>
+<li><code>id</code>：sql执行的顺序。id的值为一个数字或null。当id为一个数字的时候，表示查询执行的顺序；当id为null时，表示此行数据是由其他查询通过union出来的结果集。id值相同时，由上到下执行，id值不同，由大到小执行。</li>
+<li><code>select_type</code>：查询类型，可选的值有：
+<ul>
+<li>SIMPLE：不包含子查询或是UNION操作的查询，多表JOIN也是SIMPLE；</li>
+<li>PRIMARY：查询中如果包含任何子查询，那么最外层的查询则被标记为PRIMARY；</li>
+<li>SUBQUERY：SELECT列表中的子查询；</li>
+<li>DEPENDENT SUBQUERY：依赖外部结果的子查询；</li>
+<li>UNION：union操作的第二个或是之后的查询的值为union；</li>
+<li>DEPENDENT UNION：当union做为子查询时，第二个或第二个后的查询的select_type值；</li>
+<li>UNION RESULT：UNION产生的结果集；</li>
+<li>DERIVED：出现在FROM子句中的子查询。</li>
+</ul>
+</li>
+<li><code>table</code>：指明从哪个表中获取数据。&lt;unionM,N&gt;由id为M和N查询union产生的结果集。&lt;derived N&gt;/&lt;subquery N&gt; 由id为n的查询产生的结果。</li>
+<li><code>partitions</code>：对于分区表，显示查询的分区id；对于非分区表，显示NULL；</li>
+<li><code>type</code>：索引使用的类型。<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201025223733.png" alt="type列的值" loading="lazy"></li>
+<li><code>possible_keys</code>：查询中可能会用到的索引；</li>
+<li><code>key</code>：查询是实际用到的索引；</li>
+<li><code>key_len</code>：实际使用索引的最大长度，由字段长度决定的；</li>
+<li><code>ref</code>：表示哪些列或常量被用于索引查找；</li>
+<li><code>rows</code>：根据统计信息预估的扫描的行数；</li>
+<li><code>filtered</code>：表示返回结果的行数占需读取行数的百分比；</li>
+<li><code>extra</code>：sql查询的一些额外的信息，可能显示的如下
+<ul>
+<li>distinct：优化distinct操作，在找到第一匹配的元组后即停止；</li>
+<li>not exists：使用not exists来优化查询；</li>
+<li>using filesort：使用文件来进行排序，通常会出现在order by或group by查询中；</li>
+<li>using index：使用了覆盖索引进行查询；</li>
+<li>using temporary：MySQL需要使用临时表来处理查询，常见于排序，子查询和分组查询；</li>
+<li>using where：需要在MySQL服务器层使用where条件来过滤数据；</li>
+<li>select tables optimized away：直接通过索引来获得数据，不用访问表。</li>
+</ul>
+</li>
+</ul>
+<h4 id="show-profiles">SHOW PROFILES</h4>
+<p>进行更细致的SQL性能分析。</p>
+<pre><code class="language-bash">select @@have_profiling;    # 查看是否支持profile功能
+select @@profiling; # 查看是否开启profile功能
+set @@prfiling=1;   # 开启profile功能
+set profiling_history_size=100; # 设置profiling处理的sql数量，默认15条
+show profiles;
+show profile for [all] query &lt;id&gt;;    # 查询指定id的sql执行详情
+</code></pre>
+<h4 id="optimizer-trace">optimizer trace</h4>
+<h3 id="如何优化sql">如何优化sql</h3>
+<p>可以从优化sql查询所涉及到的表中的索引或改写sql以达到更好的利用索引的目的。索引可以告诉存储引擎如何快速的查询到所需要的数据。</p>
+<p>索引的数据结构：</p>
+<ul>
+<li>B树<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201114201514.png" alt="B树" loading="lazy">
+<ul>
+<li>根节点的子节点个数：2&lt;=x&lt;=m，m是树的阶；</li>
+<li>中间节点的子节点个数：m/2 &lt;= y&lt;= m；</li>
+<li>每个中间节点包含n个关键字，n=子节点个数-1且按升序排序</li>
+<li>在关键字节点的左子树都是小于关键字的，右子树都是大于关键字的。</li>
+</ul>
+</li>
+<li>B+树<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201114203716.png" alt="B+树" loading="lazy">
+<ul>
+<li>有n个子节点的节点中含有n个关键字；</li>
+<li>叶子节点包含了所有关键字的信息，且关键字自小到大排序，形成一个有序链表；</li>
+<li>非叶子节点只保存索引，叶子节点保存索引和数据。</li>
+</ul>
+</li>
+<li>B树与B+树
+<ul>
+<li>B+树相对矮胖；</li>
+<li>B树可以直接在非叶子节点上获取数据，B+树需要到叶子节点上才能获取数据；</li>
+<li>B+树可以在范围查询的时候，在查询到某叶子节点后按链表向后遍历，效率会更高。</li>
+</ul>
+</li>
+</ul>
+<p>InnoDB的存储方式：</p>
+<ul>
+<li>B+树</li>
+<li>主键索引：叶子节点存储主键和数据</li>
+<li>非主键索引（二级索引、辅助索引）：叶子节点存储索引以及主键</li>
+</ul>
+<p>MyISAM存储方式：</p>
+<ul>
+<li>B+树</li>
+<li>主键/非主键索引的叶子都是存储指向数据块的指针</li>
+</ul>
+<p>InnoDB支持的索引类型有：</p>
+<ul>
+<li>Btree索引：平常使用中，如果没有说明索引的类型，一般都是Btree索引；
+<ul>
+<li>使用B+树的结构存储索引数据；</li>
+<li>适用于前缀查询</li>
+<li>适用于全值匹配的查询
+<blockquote>
+<p>class_name = 'mysql' 或 class_name in ('mysql', 'postgreSQL')</p>
+</blockquote>
+</li>
+<li>适合处理范围查找
+<blockquote>
+<p>study_cnt between 1000 and 3000 或 study_cnt &gt; 3000</p>
+</blockquote>
+</li>
+<li>Btree索引的从索引的最左侧开始匹配查找列</li>
+</ul>
+</li>
+<li>自适应Hash索引：为优化查询性能自动建立的，不需要开发人员或DBA手动管理；Hash索引的性能会比B树好些，但是Hash索引不是按照索引值排序，所以不可使用排序。也不支持部分索引列匹配查询，只支持等值查询，不支持范围查询，模糊查询。Hash冲突越严重，性能下降越厉害。
+<blockquote>
+<p>innodb_adaptive_hash_index<br>
+为什么用 B+ 树做索引而不用哈希表做索引?</p>
+<ol>
+<li>哈希表是把索引字段映射成对应的哈希码然后再存放在对应的位置，这样的话，如果我们要进行模糊查找的话，显然哈希表这种结构是不支持的，只能遍历这个表。而B+树则可以通过最左前缀原则快速找到对应的数据。</li>
+<li>如果我们要进行范围查找，例如查找ID为100 ~ 400的人，哈希表同样不支持，只能遍历全表</li>
+<li>索引字段通过哈希映射成哈希码，如果很多字段都刚好映射到相同值的哈希码的话，那么形成的索引结构将会是一条很长的链表，这样的话，查找的时间就会大大增加。</li>
+</ol>
+</blockquote>
+</li>
+<li>全文索引：使用elasticsearch或solr</li>
+<li>空间索引：存储GIS数据，地理位置的索引（不推荐）</li>
+</ul>
+<p>应该在什么列上建立索引？</p>
+<ol>
+<li>在where子句中的列，这些列是否有比较好的筛选性（列值的重复越小的，筛选性越好）</li>
+<li>包含在ORDER BY、GROUP BY、DISTINCT中的字段</li>
+<li>多表JOIN的关联列
+<blockquote>
+<p>创建索引：create index idx_xx ON table_name(column_name)<br>
+查看索引：show index from table_name<br>
+删除索引：alter table table_name drop index idx_xx</p>
+</blockquote>
+</li>
+</ol>
+<p>如何选择符合索引键的顺序？</p>
+<ol>
+<li>区分度最高的列放在联合索引的最左侧</li>
+<li>使用最频繁的列放到联合索引的最左侧</li>
+<li>尽量把字段长度小的列放在联合索引列的最左侧</li>
+</ol>
+<p>Btree索引的限制：</p>
+<ul>
+<li>只能从最左侧开始按索引键的顺序使用索引，不能跳过索引键</li>
+<li>NOT IN和&lt;&gt;操作无法使用索引</li>
+<li>索引列上不能使用表达式或者函数</li>
+</ul>
+<p>索引并非越多越好，索引可以提高查询效率，也会降低插入和更新的效率。使用IN查询是可以用到索引，但是IN查询列表很大，mysql引擎会认为使用全表扫描的效率更高而放弃使用索引。查询过滤的顺序也不必与索引键顺序相同才可以使用到索引，mysql引擎会自动调整顺序以适应索引顺序从而使用到索引。</p>
+<h3 id="改写sql">改写SQL</h3>
+<p>改写SQL的原则：</p>
+<ul>
+<li>使用outer join代替not in（MySQL8.0会自动转换）</li>
+<li>使用CTE代替子查询</li>
+<li>拆分复杂的大SQL为多个简单的小SQL</li>
+<li>使用计算列优化查询<pre><code class="language-bash"># 可以生成一个total_score计算列。为计算列添加索引，可优化查询速度。
+  alter table imc_classvalue add column total_score DECIMAL(3,1) as (content_score + level_score + logic_score) 
+</code></pre>
+</li>
+</ul>
+<h4 id="join语句的优化">JOIN语句的优化</h4>
+<p>JOIN的类型有：<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/sql-join.png" alt="JOIN的类型" loading="lazy"></p>
+<p>JOIN的算法：</p>
+<ul>
+<li>Nested Loop Join（NLJ）</li>
+<li>Block Nested Loop Join（BNLJ）：使用join buffer降低对一张表的扫描次数，可以使用 <code>join_buffer_size</code>调整join_buffer大小；每个能被缓存的join都会分配一个join buffer，一个查询可能拥有多个join buffer。join buffer在执行连接之前会分配，在查询完成之后释放。但需要满足以下条件：
+<ul>
+<li>连接类型是ALL，index或是range；</li>
+<li>第一个nonconst table不会分配join buffe，即使类型是all或index；</li>
+<li>join buffer只会缓存需要的字段，非整行数据；</li>
+</ul>
+</li>
+<li>Batched Key Access Join（BKA）：mysql5.6，基于Multi Range Read（MRR）。
+<blockquote>
+<p>MRR核心：将随机IO转换成顺序IO，从而提升性能。<br>
+MRR参数：<br>
+- optimizer_switch的子参数<br>
+- mrr：是否开启mrr，on开启，off关闭<br>
+- mrr_cost_based：表示是否要开启基于成本计算的MRR<br>
+- batched_key_access：<br>
+- read_rnd_buffer_size：指定mrr缓存大小</p>
+</blockquote>
+</li>
+<li>Hash Join：mysql8.0.18，当限制会比较多，在mysql8.0.20限制会比较少，建议在8.0.20上使用。用来代替BNLJ。为较小的表在内存中构建一个hash表，然后去扫描大表，扫描的过程中查询hash表是否满足条件。</li>
+</ul>
+<p>JOIN调优原则：</p>
+<ul>
+<li>小表驱动大表（优化器会自动执行，也可以使用 straight_join 指定驱动表）；</li>
+<li>如果where条件，应当要能够使用索引，并尽可能地减少外层循环的数据量；</li>
+<li>join的字段尽量创建索引；</li>
+<li>尽量减少扫描的行数（限制在百万内）；</li>
+<li>参与join的表不要太多（不超过3张）；</li>
+<li>如果被驱动表的join字段用不了索引，且内存较为充足，可以考虑join buffer设置的大一些。</li>
+</ul>
+<p>JOIN调优原则：</p>
+<ul>
+<li>小表驱动大表（优化器会自动执行，也可以使用 straight_join 指定驱动表）；</li>
+<li>如果where条件，应当要能够使用索引，并尽可能地减少外层循环的数据量；</li>
+<li>join的字段尽量创建索引；</li>
+<li>尽量减少扫描的行数（限制在百万内）；</li>
+<li>参与join的表不要太多（不超过3张）；</li>
+<li>如果被驱动表的join字段用不了索引，且内存较为充足，可以考虑join buffer设置的大一些。</li>
+</ul>
+<h4 id="分页查询优化">分页查询优化</h4>
+<ol>
+<li>使用覆盖索引</li>
+<li>使用覆盖索引 &amp; join</li>
+<li>使用覆盖索引 &amp; 子查询</li>
+<li>范围查询 &amp; limit语句</li>
+<li>如果可以获取起始主键值和结束主键值，可以改成between...and</li>
+<li>禁止过大页码</li>
+</ol>
+<h4 id="count优化">COUNT优化</h4>
+<p>一些关于count的结论：</p>
+<ol>
+<li>count(*)和count(1)是一样的；</li>
+<li>count(*)会选择最小的非主键索引，如果不存在任何非主键索引，则会使用主键；</li>
+<li>count(*)不会排除null行，而count(字段)会排除；</li>
+<li>如果没有特殊需求，尽量count(*)。</li>
+</ol>
+<p>优化建议：</p>
+<ul>
+<li>mysql8.0.13会针对无条件的count语句去优化</li>
+<li>使用更小的非主键索引</li>
+<li>把数据库引擎切换成MyISAM</li>
+<li>使用并维护一张汇总表，</li>
+<li>使用sql_calc_found_rows，未来会被废弃</li>
+<li>使用缓存</li>
+<li>查询information_schema.tables，估算值</li>
+<li>show table status where name = 'user'，估算值</li>
+<li>explain select * from salaries，估算值</li>
+</ul>
+<h4 id="order-by优化">ORDER BY优化</h4>
+<p>MySQL的排序模式</p>
+<ol>
+<li>
+<p>rowid排序（常规排序）</p>
+<ol>
+<li>过程
+<ol>
+<li>从表中获取满足where条件的记录；</li>
+<li>对于每条记录，将记录的主键即排序键（id、order_column）取出放入sort buffer（<code>sort_buffer_size</code>）；</li>
+<li>如果sort buffer能存放所有满足条件的id、order_column，则进行排序；否则sort buffer满后，排序并写到临时文件。快排算法；</li>
+<li>若排序中产生了临时文件，需要利用归并排序算法，从而保证记录有序；</li>
+<li>循环执行上述过程，知道所有满足条件的记录全部参与排序；</li>
+<li>扫描排好序的id、order_colum对，并利用id去取select需要返回的其他字段；</li>
+<li>返回结果集</li>
+</ol>
+</li>
+<li>特点
+<ol>
+<li>如果sort buffer不能存放结果集里面的所有id、order_column，会产生临时文件</li>
+<li>一次排序需要两次IO。
+<blockquote>
+<p>第二步：把id、order_column放入sort_buffer；第六步：通过id去获取需要返回的其他字段。由于返回结果是按照order_column排序的，所以id是乱序的，会存在随机io的问题。MySQL内部针对这种情况做了优化。在用id取数据之前，会按照id排序并放到一个缓存里面，这个缓存大小由<code>read_rnd_buffer_size</code> 控制，接着再去记录，从而把随机io转换成顺序io。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>全字段排序（优化排序）<br>
+直接取出SQL中需要的所有的字段，放到sort buffer中。由于sort buffer已经包含了查询需要的所有字段，因此在sort buffer中排序完成后可直接返回。<br>
+相对于rowid排序，全字段排序的优缺点有：</p>
+<ul>
+<li>性能提升，无需两次io；</li>
+<li>一行数据占用的空间回比rowid排序的要多，更容易导致临时文件。</li>
+</ul>
+</li>
+<li>
+<p>rowid和全字段是如何选择的？<br>
+当order by SQL中出现字段的总长度小于配置项 <code>max_length_for_sort_data</code> ，会使用全字段排序，否则使用rowid排序。</p>
+</li>
+<li>
+<p>打包字段排序<br>
+MySQL5.7引入，全字段模式的优化，工作原理一样，但是将字段紧密地排列在一起，而不是使用固定长度空间。</p>
+</li>
+</ol>
+<p>如何调优order by：</p>
+<ul>
+<li>利用索引，防止filesort发生</li>
+<li>如果发生filesort，并且没法避免，需要优化filesort
+<ul>
+<li>调大sort_buffer_size，减少/避免临时文件和归并操作
+<ul>
+<li>optimizer trace中 <code>num_initial_chunks_spilled_to_disk</code>的值</li>
+<li>sort_merge_passess变量的值</li>
+</ul>
+</li>
+<li>调大 <code>read_rnd_buffer_size</code>，让一次顺序io返回的结果更多</li>
+<li>设置合理的 <code>max_length_for_sort_data</code> 的值（一般不调整）</li>
+<li>调小 <code>max_sort_length</code>，即排序时最多取多少字节</li>
+</ul>
+</li>
+</ul>
+<h4 id="group-by优化">GROUP BY优化</h4>
+<p>MySQL有如下处理group by语句的方式，性能一次递减：</p>
+<ul>
+<li>松散索引扫描（Loose Index Scan）<br>
+无需扫描满足条件的所有索引键即可返回结果。在explain语句的extra中会显示 <code>using index for group by</code>。但是sql需要满足：查询是作用在单张表上的，GROUP BY指定的所有字段要符合最左前缀原则，而且没有其他字段。如果存在聚合函数，只支持min()/max()，并且如果同时使用了min()和max()，则必须作用于同一个字段。聚合函数作用的字段必须在索引中，并且紧跟GROUP BY所指定的字段。如果查询中存在除GROUP BY指定的列以外的其他部分，则必须以常量的形式出现。</li>
+<li>紧凑索引扫描（Tight Index Scan）</li>
+<li>临时表（Temporary table）</li>
+</ul>
+<h3 id="表设计的优化">表设计的优化</h3>
+<ol>
+<li>
+<p>表属性尽量不要设置为NULL。<br>
+NULL是默认行为，如果不指定列字段为NOT NULL的，那么它就是NULL的。NULL并非不占用存储空间，反而需要MySQL需要额外的存储空间和逻辑处理，而且对于可为null的索引列，其使用和统计都会更加复杂。NULL参与的查询是需要使用IS NULL/IS NOT NULL作为条件的；当索引为NULL的值作为条件时，这个sql不会用到索引，NULL参与的计算，其结果都为NULL，聚合查询的结果都会忽略值NULL的记录；在排序中NULL值所在列也会排在最前面。</p>
+</li>
+<li>
+<p>不随意设置数据类型<br>
+创建表时要指定主键，主键不应该具有业务含义。虽然MySQL允许创建表时不指定主键，但是在表中没有非空整型唯一索引的时候InnoDB会自动添加隐式主键。<br>
+选择合适的数据类型和恰当的取值范围。使用存储所需的最小数据类型；选择简单的数据类型；存储小数直接选择decimal；尽量避免使用text和blob。<br>
+不建议使用枚举ENUM类型。枚举类型的值都是从允许值列表中选择的，这个列表在创建表结构就定义好了。枚举的优点是：枚举存储是数字，数据会更加紧凑；允许值提前定义，MySQL可以检查出数据的正确性。查询枚举列值的时候，默认显示的是枚举的值，如果想查询枚举的索引，需要给列加0。比如<code>select name, gender from user;</code> 可以查出枚举列gender的枚举值，而 <code>select name, gender + 0 from user;</code> 可以查出枚举列gender的枚举索引。使用枚举同样需要注意：</p>
+<ul>
+<li>对枚举列使用sum、avg等聚合函数的时候，会使用枚举列的索引。因为聚合函数的参数是数字；</li>
+<li>对枚举列排序的时候，是根据其索引排序的；如果要按值排序，需要使用concat函数；</li>
+<li>如果将数据存储到ENUM列中，则将数字视为可能值得索引，存储的值是具有该索引的枚举成员。如果存储的是字符串的数字，MySQL会先转成数值类型，去匹配索引序号。</li>
+</ul>
+</li>
+<li>
+<p>正确的使用索引。<br>
+字符串类型的查询的时候没有使用引号，是不会使用索引的。where条件左边的字段参与了函数或数学运算，不会使用索引；联合索引最左前缀顺序不匹配，不使用索引。<br>
+不再使用的索引需要及时删除，否则MySQL需要维护索引，浪费空间和性能。为选择性低的列创建索引意义不大。列值过长，可以选择部分前缀作为索引，而不是整列加上索引。表记录不超过1000行，不需要创建索引。一张表的索引不要超过5个。</p>
+<blockquote>
+<p>select count(distinct(concat(first_name, left(last_name, 3))))/count(*) from user;  # 查询出的值越接近1，代表选择性越好</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="其他地方的优化">其他地方的优化</h3>
+<ol>
+<li>
+<p>MySQL连接设置<br>
+MySQL默认的连接超时是8小时(28800秒)，对应的配置参数是 <code>wait_timeout</code>。一般在连接的参数配置做自动重连。</p>
+<blockquote>
+<p>jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;chararchterEncoding=utf8&amp;autoReconnect=true</p>
+</blockquote>
+<p>但是autoReconnect是有副作用的。原有连接上的事务将会被回滚，连接中持有的表将会全部释放，连接关联的会话session将会丢失，连接中定义的用户变量将会丢失，连接中定义的预编译SQL将会丢失。可以修改MySQL配置，避免断开连接。</p>
+<blockquote>
+<p>[mysqld]<br>
+wait_timeout = 288000<br>
+interactive_timeout = 28800</p>
+</blockquote>
+<p>连接池的配置同样也会影响连接，如HikariCP配置：</p>
+<ul>
+<li>maximum-pool-size：最大连接数目。超过这个数目，新的数据库访问线程会被阻塞。推荐大小为cpu核心数*2+硬盘数；</li>
+<li>minimum-idle：最小连接数目；</li>
+<li>max-lifetime：最大连接生命时间，用来设置一个connection在连接池中的存活时间；</li>
+<li>idle-timeout：一个链接idle状态的最大时长，超时则被释放。</li>
+</ul>
+</li>
+</ol>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://daffupman.github.io/a5-Z-yWdo/">
+                                <h3 class="post-title">
+                                    Shiro安全框架
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#sql%E4%BC%98%E5%8C%96">SQL优化</a>
+<ul>
+<li><a href="#%E7%B4%A2%E5%BC%95">索引</a>
+<ul>
+<li><a href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95">主键索引和非主键索引</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87">测试数据准备</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E6%89%BE%E5%87%BA%E6%95%88%E7%8E%87%E4%BD%8E%E7%9A%84sql">如何找出效率低的SQL</a></li>
+<li><a href="#%E5%88%86%E6%9E%90%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92">分析执行计划</a>
+<ul>
+<li><a href="#explain">EXPLAIN</a></li>
+<li><a href="#show-profiles">SHOW PROFILES</a></li>
+<li><a href="#optimizer-trace">optimizer trace</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96sql">如何优化sql</a></li>
+<li><a href="#%E6%94%B9%E5%86%99sql">改写SQL</a>
+<ul>
+<li><a href="#join%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%BC%98%E5%8C%96">JOIN语句的优化</a></li>
+<li><a href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">分页查询优化</a></li>
+<li><a href="#count%E4%BC%98%E5%8C%96">COUNT优化</a></li>
+<li><a href="#order-by%E4%BC%98%E5%8C%96">ORDER BY优化</a></li>
+<li><a href="#group-by%E4%BC%98%E5%8C%96">GROUP BY优化</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A1%A8%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%BC%98%E5%8C%96">表设计的优化</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%9C%B0%E6%96%B9%E7%9A%84%E4%BC%98%E5%8C%96">其他地方的优化</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '9f58dbffcdaf89d24412',
+            clientSecret: '1285bea2c70ba4c5d996b68cf847056d9b5b68fd',
+            repo: 'daffupman.github.io',
+            owner: 'daffupman',
+            admin: ['daffupman'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

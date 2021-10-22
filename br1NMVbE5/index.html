@@ -1,0 +1,381 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    Git操作指南 | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            Git操作指南
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-03-14</time>
+                            
+                                <a href="https://daffupman.github.io/SfRQdaNBV/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #git
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://for-markdown.oss-cn-shanghai.aliyuncs.com/git_cover.jfif')"></div>
+                            
+                                <div class="post-content">
+                                    <h2 id="快速上手">快速上手</h2>
+<ol>
+<li>git下载地址：https://git-scm.com/</li>
+<li>配置用户信息<pre><code class="language-shell">git config --global user.name = &lt;username&gt;   # 配置用户名，加&quot;&quot;
+git config --global user.email = &lt;useremail&gt;    # 配置邮箱，加&quot;&quot;
+git config --list # 查询配置信息
+</code></pre>
+</li>
+<li>创建目录并初始化仓库，会生成一个<code>.git</code>的隐藏文件夹<pre><code class="language-shell">git init &lt;dirName&gt;
+</code></pre>
+</li>
+<li>关联远程仓库<pre><code class="language-shell">git remote add &lt;name&gt; &lt;url&gt;		# 添加远程仓库
+git remote						#列出所有远程仓库
+</code></pre>
+</li>
+<li>复制远程仓库中的项目<pre><code class="language-shell">git clone &lt;url&gt;
+</code></pre>
+</li>
+<li>文件提交<pre><code class="language-shell">git add &lt;file&gt;						#把文件从workspace添加进index中
+git commit &lt;file&gt; -m &lt;comment&gt;		#把文件从index添加进repostory中
+</code></pre>
+</li>
+<li>从远程仓库更新项目<pre><code class="language-shell">git pull &lt;name&gt; master
+</code></pre>
+</li>
+<li>提交到远程仓库<pre><code class="language-shell">git push &lt;name&gt; master
+</code></pre>
+</li>
+</ol>
+<h2 id="git原理">Git原理</h2>
+<h3 id="git工作空间">Git工作空间</h3>
+<figure data-type="image" tabindex="1"><img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/1548725462646.png" alt="" loading="lazy"></figure>
+<h3 id="git常用命令">Git常用命令</h3>
+<ul>
+<li>
+<p>查看当前状态</p>
+<pre><code class="language-shell">git status
+</code></pre>
+</li>
+<li>
+<p>把指定文件恢复到暂存区</p>
+<pre><code class="language-shell">git reset HEAD &lt;file&gt;
+</code></pre>
+</li>
+<li>
+<p>把暂存区的文件恢复并覆盖到工作区</p>
+<pre><code class="language-shell">git checkout -- &lt;file&gt;
+</code></pre>
+</li>
+<li>
+<p>查看提交历史</p>
+<pre><code class="language-shell">git log
+</code></pre>
+</li>
+<li>
+<p>文件在各个空间的切换<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/1543225543060.png" alt="" loading="lazy"><br>
+HEAD指针指向仓库中的当前版本：<code>HEAD~n</code>,表示前第n个版本；<br>
+移动HEAD指向，指向上一个快照；再将指针指向的快照回滚带暂存区（默认情况）</p>
+<pre><code class="language-shell">git reset --mixed HEAD~
+</code></pre>
+<p>移动HEAD指针的指向，指向上一个快照</p>
+<pre><code class="language-shell">git reset --soft HEAD~
+</code></pre>
+<p>移动HEAD指针的指向，指向上一个快照；将指向的快照回滚到暂存区；将暂存区的文件还原到工作区</p>
+<pre><code class="language-shell">git reset --hard HEAD~
+</code></pre>
+</li>
+<li>
+<p>版本回滚<br>
+回滚到指定快照</p>
+<pre><code class="language-shell">git log			#查看快照id（一串哈希值）
+git reset [id]	#回到该id快照
+</code></pre>
+</li>
+<li>
+<p>版本比较</p>
+<ul>
+<li>比较工作空间和暂存目录<pre><code class="language-shell">git diff
+</code></pre>
+</li>
+<li>比较两个历史快照<pre><code class="language-shell">git diff 快照id1 快照id2
+</code></pre>
+</li>
+<li>比较当前工作去和仓库中的快照<pre><code class="language-shell">git diff 快照id
+</code></pre>
+</li>
+<li>比较暂存区和仓库的快照(不加快照id默认是HEAD指向的版本)<pre><code class="language-shell">git diff --cached 快照ud
+</code></pre>
+</li>
+<li>奥义图<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/1543226372637.png" alt="" loading="lazy"></li>
+</ul>
+</li>
+<li>
+<p>其他</p>
+<ul>
+<li>更正最新一次的提交备注<pre><code class="language-shell">git commit --amend -m &quot;description&quot;
+</code></pre>
+</li>
+<li>删除文件（除了删除工作区域和暂存区域的该文件外，还需要修改仓库HEAD指向，将其指向上一个版本，上个版本是不包含该文件的）<pre><code class="language-shell">git rm &lt;file&gt;
+git reset --soft HEAD~
+</code></pre>
+</li>
+<li>删除暂存区域的文件， 不会删除工作目录的文件<pre><code class="language-shell">git rm --cached &lt;file&gt;
+</code></pre>
+</li>
+<li>重命名文件<pre><code class="language-shell">git mv &lt;oldname&gt; &lt;newname&gt;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="git分支">Git分支</h2>
+<ul>
+<li>创建新分支<pre><code class="language-shell">git branch &lt;branchname&gt;
+</code></pre>
+</li>
+<li>--decorate:下那是tag信息； --oneline:精简显示每个快照； --graph:图形化显示<pre><code class="language-shell">git log --decorate --oneline --graph -all
+</code></pre>
+</li>
+<li>切换分支，此时HEAD指针会指向切换的分支上<pre><code class="language-shell">git checkout &lt;brachname&gt;
+git checkout -b &lt;branchname&gt;		#创建分支，并切换到新分支中
+</code></pre>
+</li>
+<li>合并分支<pre><code class="language-shell">git merge &lt;branchname&gt;
+</code></pre>
+</li>
+<li>删除分支<pre><code class="language-shell">git branch -d &lt;branchname&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="ssh授权">ssh授权</h2>
+<ol>
+<li>授权命令，以生成公钥和私钥： <code>ssh-keygen -t rsa</code></li>
+<li>在github上的settings-&gt;SSH and GPG keys中添加公钥</li>
+<li>验证是否授权成功：<code>ssh -T git@github.com</code></li>
+</ol>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://daffupman.github.io/yjClS6znS/">
+                                <h3 class="post-title">
+                                    入坑Nginx
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B">快速上手</a></li>
+<li><a href="#git%E5%8E%9F%E7%90%86">Git原理</a>
+<ul>
+<li><a href="#git%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4">Git工作空间</a></li>
+<li><a href="#git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Git常用命令</a></li>
+</ul>
+</li>
+<li><a href="#git%E5%88%86%E6%94%AF">Git分支</a></li>
+<li><a href="#ssh%E6%8E%88%E6%9D%83">ssh授权</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '9f58dbffcdaf89d24412',
+            clientSecret: '1285bea2c70ba4c5d996b68cf847056d9b5b68fd',
+            repo: 'daffupman.github.io',
+            owner: 'daffupman',
+            admin: ['daffupman'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

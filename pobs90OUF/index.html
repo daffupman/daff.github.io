@@ -1,0 +1,335 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    fastdfs | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        fastdfs</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/ceDfb9-tr/">
+                        分布式文件系统FastDFS
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2021-03-14</time>
+                    
+                        <a href="https://daffupman.github.io/pobs90OUF/" class="post-tag i-tag
+                            i-tag-other_4">
+            #fastdfs
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            什么是FastDFS
+FastDFS是一个开源的轻量级分布式文件系统，它可以管理文件，功能包括：文件存储、文件同步和文件访问，解决了大容量存储和负载均衡的问题。
+FastDFS服务端的两个角色：跟踪器（tracker）和存储节点（storage）。两者可以由一台或多台服务器构成。为了支持大容量，存储节点采用分卷的组织方式。存储系统由一个或多个卷组成，卷和卷之间的文件是相互独立的。当存储空间不足时，可以动态增加卷来扩大存储系统的容量。FastDFS中的文件标识分为两个部分：卷名和文件名。
+常见术语：
+
+tracker：追踪服务，用于协调和负载均衡，同时监控storage的状态；
+storage：存储服务器，保存文件和文件的元数据；
+group：组，同组节点提供冗余备份，不同组用于扩容；
+meta data：文件的元数据。
+
+FastDFS的架构
+
+客户端会向tracker发起请求上传，tracker会在storage中选择一个位置。tracker返回这个位置给客户端，客户端再向storage发起文件上传。storage存储完成后返回文件存储的相关信息。
+
+安装
+
+
+软件准备
+
+libfatscommon
+FastDFS
+fastdfs-nginx-module
+nginx
+
+
+
+安装依赖
+yum -y install zlib zlib-devel pcre pcre-devel gcc gcc-c++ openssl openssl-devel libevent libevent-devel perl unzip wget
+
+
+
+安装libfastcommon
+tar -zxvf libfastcommon-1.0.42.tar.gz -C /usr/local
+cd /usr/local/libfastcommon-1.0.42/
+./make.sh &amp;amp;&amp;amp; ./make.sh install
+
+
+
+安装fastdfs程序
+tar -zxvf fastdfs-6.04.tar.gz -C /usr/local
+cd /usr/local/fastdfs-6.04/
+vi make.sh # 修改make文件
+TARGET_PREFIX=$DESTDIR/usr
+TARGET_CONF_PATH=$DESTDIR/etc/fdfs
+TARGET_INIT_PATH=$DESTDIR/etc/init.d
+./make.sh &amp;amp;&amp;amp; ./make.sh install
+cp /usr/local/fastdfs-6.04/conf/* /etc/fdfs/
+
+
+
+配置fastdfs
+# 配置tracker
+vi tracker.conf
+
+# 修改如下内容
+base_path=/usr/local/fastdfs-6.04/tracker
+
+# 配置storage
+vi storage.conf
+
+# 修改内容如下
+# 修改组名 
+group_name=daff01
+# 修改storage的工作空间 
+base_path=/usr/local/fastdfs-6.04/storage 
+# 修改storage的存储空间 
+store_path0=/usr/local/fastdfs-6.04/storage 
+# 修改tracker的地址和端口号，用于心跳 
+tracker_server=192.168.65.20:22122 
+# 后续结合nginx的一个对外服务端口号 
+http.server_port=8888
+
+
+
+创建目录
+mkdir /usr/local/fastdfs-6.04/tracker -p
+mkdir /usr/local/fastdfs-6.04/storage -p
+
+
+
+启动tracker、storage
+/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf
+/usr/bin/fdfs_storaged /etc/fdfs/storage.conf
+ps -ef|grep tracker
+/usr/bin/stop.sh /etc/fdfs/tracker.conf
+
+
+
+fastdfs的nginx模块
+tar -zxvf fastdfs-nginx-module-1.22.tar.gz -C /usr/local
+cp mod_fastdfs.conf /etc/fdfs
+mkdir /usr/local/fastdfs-6.04/tmp
+# 修改mod_fastdfs.config文件
+base_path=/usr/local/fastdfs-6.04/tmp 
+tracker_server=192.168.65.20:22122 
+group_name=daff01
+url_have_group_name = true  # url上会携带group_name
+store_path0=/usr/local/fastdfs-6.04/storage
+
+vi /usr/local/fastdfs-nginx-module-1.22/src/config # 修改config文件，将两处的/usr/local/include的路径删除local
+# 重新配置nginx
+./configure \
+    --prefix=/usr/local/nginx-1.18.0 \
+    --pid-path=/var/run/nginx/nginx.pid \
+    --lock-path=/var/lock/nginx.lock \
+    --error-log-path=/var/log/nginx/error.log \
+    --http-log-path=/var/log/nginx/access.log \
+    --with-http_gzip_static_module \
+    --http-client-body-temp-path=/var/temp/nginx/client \
+    --http-proxy-temp-path=/var/temp/nginx/proxy \
+    --http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+    --http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+    --http-scgi-temp-path=/var/temp/nginx/scgi \
+    --add-module=/usr/local/fastdfs-nginx-module-1.22/src
+make &amp;amp; make install # 编译和安装
+
+# nginx配置文件增加访问文件路径
+server {
+    listen 8888;
+    server_name localhost;
+    location /daff01/M00 {
+        ngx_fastdfs_module;
+    }
+}
+
+./nginx # 启动nginx
+
+
+
+测试
+# 配置client.conf
+vi /etc/fdfs/client.conf
+base_path=/usr/local/fastdfs-6.04/client
+tracker_server=192.168.65.20:22122
+
+# 使用测试图片上传
+/usr/bin/fdfs_test /etc/fdfs/client.conf upload /opt/what-is-nginx.png
+# 访问
+http://192.168.65.20:8888/daff01/M00/00/00/wKhBFGBOUDiAdfcvAAATbWLJjlE268_big.png
+
+
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/ceDfb9-tr/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://daffupman.github.io/images/avatar.png?v=1634906345588)">
+        </div>
+        <h1 class="id_card-title">
+            
+        </h1>
+        <h2 class="id_card-description">
+            
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,341 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    Spring源码纪事本末 | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            Spring源码纪事本末
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-10-22</time>
+                            
+                        </div>
+                        
+                                <div class="post-content">
+                                    <h2 id="一-对待spring的态度">一、对待Spring的态度</h2>
+<p>我相信绝大部分Java开发人员对Spring都是很耳熟能详的，在Spring框架的帮助下，开发人员的工作会非常的快乐，但对Spring内部的认识却不尽相同。这篇博客是自己在学习Spring源码的一些记录和认识，目的有：</p>
+<ol>
+<li>以Spring内部的角度去看待Spring提供的各种功能，即Spring是如何提供这些能力的；</li>
+<li>为了更好地去学习其他开源代码做铺垫；</li>
+<li>从设计角度去看待代码如何组织起来的，即学习如何编写高质量代码。</li>
+</ol>
+<p>Spring代码非常复杂和庞大，需要有耐心和恒心，慢慢地啃下来，对自己的代码能力一定会有长足进步的。</p>
+<h2 id="二-spring启动的流程">二、Spring启动的流程</h2>
+<p>真实项目中，在启动Spring项目之前，我们一般会先提供一份Spring的配置文件。Spring会根据这个配置文件去指定的地方读取BeanDefinition，或者直接从配置文件中读取BeanDefinition，放在内部的Bean容器中。在Spring的启动过程中或启动完成，都是可以去使用这些Bean。所以SpringIOC容器是一个非常重要的角色，实际上整个过程非常的复杂，研究他对BeanDefinition的加载和使用就是我观察的重点。</p>
+<p>以xml配置文件为例，配置文件中定义了一个BeanDefinition，在创建容器的时候，会把配置文件的路径告诉Spring。IOC容器根据路径，去找到这个配置文件，然后读取这个配置问文件生成Resource。接着去读取文件中的信息，获取一个个BeanDefinition，注册到BeanFactory中。这是一个大致的流程。</p>
+<ul>
+<li>FileSystemXmlApplicationContext(String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
+<ul>
+<li>设置父容器
+<ul>
+<li>创建resourcePatternResolver</li>
+<li>设置父容器，合并父容器的Environment</li>
+</ul>
+</li>
+<li>解析配置文件路径（将路径解析成一个个具体的路径）</li>
+<li>刷新容器
+<ul>
+<li>prepareRefresh
+<ul>
+<li>设置容器的一些标志位；</li>
+<li>initPropertySources：钩子函数，在AbstractRefreshableWebApplicationContext中会将ServletContextPropertySource和ServletConfigPropertySource加入到Environment的PropertySource集合中；</li>
+<li>验证Environment的必要属性；</li>
+<li>设置applicationListeners和applicationEvents；</li>
+</ul>
+</li>
+<li>obtainFreshBeanFactory
+<ul>
+<li>refreshBeanFactory：钩子函数。AbstractRefreshableApplicationContext会重写创建beanFactory并加载beanDefinition，而GenericApplicationContext只是重新设置id；</li>
+<li>getBeanFactory：钩子函数。获取beanFactory；</li>
+</ul>
+</li>
+<li>prepareBeanFactory
+<ul>
+<li>给beanfactory设置beanClassLoader、beanExpressionResolver、propertyEditorRegistrar、ApplicationContextAwareProcessor、ignoredDependencyInterfaces，beanPostProcessor，</li>
+<li>添加bean实例（Enviroment、SystemProperties和SystemEnvironment）</li>
+</ul>
+</li>
+<li>postProcessBeanFactory：钩子函数，允许子类继续向beanFactory中添加设置。比如AbstractRefreshableApplicationContext会添加ServletContextAwareProcessor，ignoreDependencyInterfaces，scopes和EnvironmentBeans（ServletContext，ServletConfig）等；</li>
+<li>invokeBeanFactoryPostProcessors
+<ul>
+<li>给beanFactory执行BeanFactoryPostProcessors。BeanFactory是否是BeanDefinitionRegistry
+<ul>
+<li>是： 先执行ApplicationContext和BeanFactory中所有的BeanDefinitionRegistryPostProcessor#postProcessBeanDefinitionRegistry，然后按实现了以下接口的BeanDefinitionRegistryPostProcessor去执行postProcessBeanDefinitionRegistry
+<ul>
+<li>PriorityOrdered</li>
+<li>Ordered</li>
+<li>其他的<br>
+接着执行所有的BeanFactoryPostProcessors的postProcessBeanFactory方法（先执行实现了BeanDefinitionRegistryPostProcessor的BeanFactoryPostProcessor）</li>
+</ul>
+</li>
+<li>否：执行ApplicationContext中所有的BeanFactoryPostProcessor的postProcessBeanFactory方法</li>
+</ul>
+</li>
+<li>执行BeanFactory中所有的BeanFactoryPostProcessor的postProcessBeanFactory方法（按顺序，分实现了PriorityOrdered接口、Ordered接口和其他）</li>
+<li>清除缓存</li>
+<li>添加LoadTimeWeaverAwareProcessor</li>
+</ul>
+</li>
+<li>registerBeanPostProcessors
+<ul>
+<li>读取beanFactory中所有的BeanPostProcessor，分实现类加入到beanFactory中</li>
+<li>添加ApplicationListenerDetector</li>
+</ul>
+</li>
+<li>initMessageSource
+<ul>
+<li>设置messageSource</li>
+</ul>
+</li>
+<li>initApplicationEventMulticaster
+<ul>
+<li>设置applicationEventMulticaster</li>
+</ul>
+</li>
+<li>onRefresh
+<ul>
+<li>钩子函数。给子类继续对ApplicationContext初始化操作</li>
+</ul>
+</li>
+<li>registerListeners
+<ul>
+<li>给applicationEventMulticaster注册监听器，并发布earlyApplicationEvents</li>
+</ul>
+</li>
+<li>finishBeanFactoryInitialization
+<ul>
+<li>beanFactory初始化结束后的操作
+<ul>
+<li>设置ConversionService</li>
+<li>添加embeddedValueResolvers</li>
+<li>初始化实现LoadTimeWeaverAware的Bean</li>
+<li>实例化所有的BeanDefinition</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>finishRefresh
+<ul>
+<li>清除缓存，发布事件等操作</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://daffupman.github.io/u-JPrYlkM/">
+                                <h3 class="post-title">
+                                    代码优雅之道
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E5%AF%B9%E5%BE%85spring%E7%9A%84%E6%80%81%E5%BA%A6">一、对待Spring的态度</a></li>
+<li><a href="#%E4%BA%8C-spring%E5%90%AF%E5%8A%A8%E7%9A%84%E6%B5%81%E7%A8%8B">二、Spring启动的流程</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '9f58dbffcdaf89d24412',
+            clientSecret: '1285bea2c70ba4c5d996b68cf847056d9b5b68fd',
+            repo: 'daffupman.github.io',
+            owner: 'daffupman',
+            admin: ['daffupman'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

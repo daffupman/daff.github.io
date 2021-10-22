@@ -1,0 +1,685 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    MySQL拾贝 | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            MySQL拾贝
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2020-11-06</time>
+                            
+                                <a href="https://daffupman.github.io/UPO6go_NY/" class="post-tag i-tag
+                            i-tag-primary">
+                            #mysql
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107012431.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>MySQL是一款非常流行，免费高性能的数据库。但是在对了解MySQl之前，需要先了解一下数据库的基本概念，这在数据库领域是通识的。接着是对MySQL的一些基础做一下简单的介绍。再着就是MySQL的高级部分了，有索引优化，MySQL版本以及服务器的配置等介绍。</p>
+<h2 id="什么是数据库">什么是数据库</h2>
+<p>数据库（Database），顾名思义，就是一个存储数据的仓库，本质上还是一个文件系统。但，它会按照特定的格式将数据存储起来，方便我们对数据库中的数据进行增加、删除、修改和查询等操作。</p>
+<p>计算机中主要有两个地方可以存储数据。一个是内存，一个是磁盘。数据存储在内存中会有这样明显的有点：存储和访问的速度很快，但是在断电和程序结束时，数据就会被清空。而且内存相对于磁盘来说，容量比较小，价格贵。把数据存储到磁盘上，是可以永久保存下去的，但是操作数据的速度就远没有存储在内存中那么快了。存储在内存或磁盘都是有各自的优点的，我们可以利用内存快的优点来存储一些访问频繁的数据，而不活跃的数据可以放到磁盘中。重要的数据还是要存储在磁盘中的。</p>
+<h2 id="数据库的类型">数据库的类型</h2>
+<p>现代的数据库主要有两类：关系型和非关系型。他们的区别可以相比较着来看：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">关系型</th>
+<th style="text-align:center">非关系型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">结构上</td>
+<td style="text-align:center">数据存储在二维表中</td>
+<td style="text-align:center">数据存储的时候没有固定的结构</td>
+</tr>
+<tr>
+<td style="text-align:center">事务上</td>
+<td style="text-align:center">支持事务的ACID</td>
+<td style="text-align:center">对事务的支持较弱，但是对数据的并发处理性能好</td>
+</tr>
+<tr>
+<td style="text-align:center">SQL支持</td>
+<td style="text-align:center">支持SQL</td>
+<td style="text-align:center">不支持SQL</td>
+</tr>
+<tr>
+<td style="text-align:center">总结</td>
+<td style="text-align:center">适合使用在数据存在一定关系，需要关联查询，需要事务支持和SQL的场景</td>
+<td style="text-align:center">适合对数据结构灵活，不需要事务，要求读写并发的场景</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mysql安装">MySQL安装</h2>
+<p>由于数据库一般都是放在linux上面的，这里就装在linux系统上面了，用的是centos7。首先要去官网下载安装，地址：https://downloads.mysql.com/archives/get/p/23/file/mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz。然后上传到linux服务器上，我这里是放到opt目录下的，安装的具体步骤如下：</p>
+<ol>
+<li>
+<p>首先要解压文件，设置用户</p>
+<pre><code class="language-bash"># 进入opt目录
+cd /opt
+# 解压文件
+tar -xvJf mysql-8.0.20-linux-glibc2.12-x86_64.tar.xz
+# 名字过长，重命名并移动到/usr/local下
+mv mysql-8.0.20-linux-glibc2.12-x86_64 /usr/local/mysql-8.0.20
+# 给mysql创建一个专用的帐户，最好也设置密码
+useradd mysql
+passwd mysql
+</code></pre>
+</li>
+<li>
+<p>添加配置</p>
+<pre><code class="language-bash"># 修改配置文件
+vi /etc/my.cnf
+</code></pre>
+<p>配置文件的内容如下</p>
+<blockquote>
+<p>[client]<br>
+port=3306<br>
+socket=/usr/local/mysql-8.0.20/mysql.sock<br>
+default-character-set=utf8mb4</p>
+<p>[mysqld]<br>
+port=3306<br>
+user=mysql<br>
+socket=/usr/local/mysql-8.0.20/mysql.sock<br>
+basedir=/usr/local/mysql-8.0.20<br>
+datadir=/usr/local/mysql-8.0.20/data<br>
+character-set-server=utf8mb4</p>
+<p>[mysqld_safe]<br>
+log-error=/usr/local/mysql-8.0.20/data/mysql-error.log<br>
+pid-file=/usr/local/mysql-8.0.20/data/mysql.pid</p>
+</blockquote>
+<p>根据配置文件的 <code>datadir</code> 项，创建一个data目录</p>
+<pre><code class="language-bash">mkdir data
+</code></pre>
+<p>修改mysql软件的目录的所属者</p>
+<pre><code class="language-bash">chown -R mysql.mysql /usr/local/mysql-8.0.20
+</code></pre>
+</li>
+<li>
+<p>运行和修改MySQL<br>
+初始化mysql</p>
+<pre><code class="language-bash">/usr/local/mysql-8.0.20/bin/mysqld  --initialize-insecure --user=mysql --basedir=/usr/local/mysql-8.0.20 --datadir=/usr/local/mysql-8.0.20/data/
+</code></pre>
+<p>拷贝启动文件</p>
+<pre><code class="language-bash">cp /usr/local/mysql-8.0.20/support-files/mysql.server /etc/init.d/mysqld
+</code></pre>
+<p>启动并连接mysql</p>
+<pre><code class="language-bash">service mysqld start
+/usr/local/mysql-8.0.20/bin/mysql -uroot -p
+</code></pre>
+<p>进入mysql后，一定要先修改密码</p>
+<pre><code class="language-bash"># 将root帐户的密码设置成root
+alter user 'root'@'localhost' identified by 'root';
+</code></pre>
+<p>此时也可以创建用户</p>
+<pre><code class="language-bash"># 创建daff@localhost用户，密码是daff
+create user 'daff'@'localhost' identified by 'daff';
+# 给daff@localhost授予所有数据库的所有表的所有权限
+grant all privileges on *.* to 'daff'@'localhost';
+# 刷新权限，使得用户的权限生效
+flush privileges;
+</code></pre>
+<p>修改root用户可远程连接，对于所有要远程连接的帐户，都需要这样设置</p>
+<pre><code class="language-bash"># 在所有的机器上都可以使用root身份连接过来
+update mysql.user set host = '%' where user = 'root';
+# 设置远程连接的密码，使用mysql_native_password是为了和很多的数据库客户端兼容
+alter user 'root'@'%' identified with mysql_native_password by 'root';
+</code></pre>
+<blockquote>
+<p>如果远程客户端连接不上mysql，需要检查一下防火墙是否关闭或端口是否开放。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="mysql常见的存储引擎">MySQL常见的存储引擎</h2>
+<p>MySQL支持多种存储引擎，具体如下：</p>
+<table>
+<thead>
+<tr>
+<th>引擎名称</th>
+<th>事务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em><strong>InnoDB</strong></em></td>
+<td>Y</td>
+<td>事务型存储引擎</td>
+</tr>
+<tr>
+<td>MyISAM</td>
+<td>N</td>
+<td>MySQL5.6之前的默认引擎，最常用的非事务型存储引擎</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td>N</td>
+<td>以CSV格式存储的非事务型存储引擎</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td>N</td>
+<td>只允许查询和新增数据而不允许修改的非事务型存储引擎，占用空间小</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>N</td>
+<td>一种易失性非事务型存储引擎</td>
+</tr>
+</tbody>
+</table>
+<p>但常用的只有InnoDB和MyISAM。最重要的还是InnoDB，再来具体看看这种存储引擎的特点：</p>
+<ul>
+<li>支持ACID；</li>
+<li>数据按主键聚集存储；</li>
+<li>支持行级锁和MVCC（多版本并发控制，进一步避免读写操作的阻塞）；</li>
+<li>支持BTree和自适应Hash索引；</li>
+<li>支持全文和空间索引（最好不用）。</li>
+</ul>
+<h2 id="mysql的数据类型">MySQL的数据类型</h2>
+<p>存储在MySQL中的数据主要又三种类型：数值类型、日期时间类型和字符串类型。<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20190513123402.png" alt="MySQL数据类型——数值类型" loading="lazy"><br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20190513123528.png" alt="MySQL数据类型——日期时间类型" loading="lazy"><br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20190513123646.png" alt="MySQL数据类型——字符串类型" loading="lazy"></p>
+<p>在创建数据库表的时候，需要认真考虑名称以及字段的类型，一般我们有以下的原则来作为指导：</p>
+<ul>
+<li>为数据选择合适的数据类型
+<ul>
+<li>优先选择符合存储数据需要的最小数据类型</li>
+<li>谨慎使用ENUM和TEXT，这会影响到查询的性能，如果要使用，最好独立成一张表。text类型的列不要有默认值。</li>
+<li>财务相关的数值类型，必须使用decimal。</li>
+</ul>
+</li>
+<li>为表和列选择合适的名字
+<ul>
+<li>所有数据库对象名称必须使用小写字母，可使用下划线分割；</li>
+<li>所有数据库对象名称定义禁止使用MySQL保留关键字；</li>
+<li>数据对象的命名需要做到见名知义，最好不要超过32个字符；</li>
+<li>临时库表需要以tmp为前缀，日期为后缀；</li>
+<li>备份库表以bak为前缀，日期为后缀</li>
+</ul>
+</li>
+</ul>
+<h2 id="sql常用语法">SQL常用语法</h2>
+<h3 id="表结构相关的操作">表结构相关的操作</h3>
+<ul>
+<li>创建表<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107002406.png" alt="创建表的语法" loading="lazy"></li>
+<li>修改表<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107002654.png" alt="修改表的语法" loading="lazy"></li>
+<li>删除表<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107002850.png" alt="删除表的语法" loading="lazy"></li>
+<li>查看表结构<pre><code class="language-bash">desc tb_name;
+# 查看表的ddl
+show create table tb_name;
+</code></pre>
+</li>
+<li>单表约束
+<ul>
+<li>主键约束：<code>primary key</code></li>
+<li>唯一约束：<code>unique</code></li>
+<li>非空约束：<code>not null</code></li>
+<li>默认约束：<code>default</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="表数据相关的操作">表数据相关的操作</h3>
+<ul>
+<li>新增数据<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107003403.png" alt="新增SQL语法" loading="lazy"></li>
+<li>删除数据<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107003704.png" alt="删除SQL语法" loading="lazy"></li>
+<li>修改数据<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107003747.png" alt="修改SQL语法" loading="lazy"></li>
+<li>查询数据<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201107003515.png" alt="查询SQL语法" loading="lazy"></li>
+<li>表的复制<pre><code class="language-bash"># 复制表结构
+create table new_tb_name like old_tb_name;
+# 复制表结构和数据
+create table new_tb_name select * from old_tb_name;
+</code></pre>
+</li>
+<li>视图<br>
+视图是一个逻辑的存储结构，也可以看出一张虚拟的表。可以像查询表一样查询视图。视图本身不存储数据。创建视图语法：<pre><code class="language-bash">CREATE VIEW view_name
+AS SELECT [ALL | DISTINCT | DISTINCTROW]
+select_expr [, select_expr ...]
+[FROM table_references]
+[WHERE where_condition]
+</code></pre>
+</li>
+</ul>
+<h2 id="系统函数">系统函数</h2>
+<p>MySQL提供了丰富的函数来处理数据，以下会罗列一些比较常用的函数。</p>
+<h3 id="时间函数">时间函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CURDATE()/CURTIME()</td>
+<td style="text-align:left">返回当前日期/返回当前时间</td>
+</tr>
+<tr>
+<td>NOW()</td>
+<td style="text-align:left">返回当前的日期和时间</td>
+</tr>
+<tr>
+<td>DATE_FORMAT(date, fmt)</td>
+<td style="text-align:left">按照fmt的格式，对日期date进行格式化</td>
+</tr>
+<tr>
+<td>SEC_TO_TIME(seconds)</td>
+<td style="text-align:left">把秒数转换成时间（小时：分：秒）</td>
+</tr>
+<tr>
+<td>TIME_TO_SEC(seconds)</td>
+<td style="text-align:left">把时间（小时：分：秒）转换成秒数</td>
+</tr>
+<tr>
+<td>DATEDIFF(date1,date2)</td>
+<td style="text-align:left">返回date1和date2相差的天数</td>
+</tr>
+<tr>
+<td>DATE_ADD(date, INTERVAL expr unit)</td>
+<td style="text-align:left">对给定的日期增加或减少指定的时间单元（unit:DAY/HOUR/MINUTS/SECOND）</td>
+</tr>
+<tr>
+<td>EXTRACT(unit FROM date)</td>
+<td style="text-align:left">返回日期date的指定部分</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-bash">SELECT DATE_FORMAT(NOW(), '%Y / %m / %d  %H : %i : %s'); # 按格式输出 2020 / 10 / 22  05 : 38 : 43
+SELECT SEC_TO_TIME(60) # 输出 00:01:00
+SELECT TIME_TO_SEC('1:00:00') # 输出 3600
+
+SELECT NOW(),
+    DATE_ADD(NOW(), INTERVAL 1 DAY), # 当前时间加一天
+    DATE_ADD(NOW(), INTERVAL 1 YEAR),  # 当前时间加一年
+    DATE_ADD(NOW(), INTERVAL -1 DAY), # 当前时间减一天
+    DATE_ADD(NOW(), INTERVAL '-1:30' HOUR_MINUTE); # 当前时间减1.5h
+    
+SELECT EXTRACT(YEAR FROM now()) # 提取当前日期的年份
+</code></pre>
+<h3 id="字符串函数">字符串函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONCAT(str1, str2, ...)</td>
+<td>把字符串str1，str2等连接成一个字符串</td>
+</tr>
+<tr>
+<td>CONCAT_WS(sep, str1, str2, ...)</td>
+<td>用指定的分隔符sep连接字符串</td>
+</tr>
+<tr>
+<td>CHAR_LENGTH(str)</td>
+<td>返回字符串str的字符个数（1个字符=3个字节）</td>
+</tr>
+<tr>
+<td>LENGTH(str)</td>
+<td>返回字符串str的字节个数</td>
+</tr>
+<tr>
+<td>FORMAT(X, D [, locale])</td>
+<td>将数字N格式化</td>
+</tr>
+<tr>
+<td>LEFT(str, len) / RIGHT(str, len)</td>
+<td>从字符串的左/右起返回len长度的子字符串</td>
+</tr>
+<tr>
+<td>SUBSTRING(str, pos[, len])</td>
+<td>从字符串str的pos位置起返回长度为len的子串</td>
+</tr>
+<tr>
+<td>SUBSTRING_INDEX(str, delim, count)</td>
+<td>返回字符串str按delim分隔的前count个子字符串</td>
+</tr>
+<tr>
+<td>LOCATE(substr, str)</td>
+<td>在字符串str中返回子串substr第一次出现的位置</td>
+</tr>
+<tr>
+<td>TRIM([remstr FROM] str)</td>
+<td>删除字符串str两端的指定的remstr</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-bash">SELECT CONCAT_WS('-', class_name, title) FROM course;
+SELECT FORMAT(1234.567, 4); # 输出 1,234.5670
+SELECT SUBSTRING_INDEX('192.168.1.1', '.', -2) # 输出 0.100
+SELECT SUBSTRING('HELLO,WORLD', 1, LOCATE(',', 'HELLO,WORLD') - 1); # 输出 HELLO
+SELECT TRIM('  A   '); # 输出：A
+SELECT TRIM('B' FROM 'BBBABBB&quot;); # 输出：A
+</code></pre>
+<h3 id="其他">其他</h3>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROUND(X, D)</td>
+<td>对数值X进行四舍五入保留D为小数</td>
+</tr>
+<tr>
+<td>RAND()</td>
+<td>返回一个在0和1之间的随机数，使用在随机排序中时，性能会很差</td>
+</tr>
+<tr>
+<td>CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...] [ELSE result] END</td>
+<td>case when</td>
+</tr>
+<tr>
+<td>MD5(str)</td>
+<td>返回str的MD5值</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-bash">SELECT user_name, 
+CASE WHEN gender = 1 THEN '男'
+WHEN gender = 0 THEN '女' ELSE '未知'
+END AS '性别'
+FROM user_things
+
+# 随机获取10条数据
+SELECT course_id FROM course
+ORDER BY RAND() LIMIT 10
+</code></pre>
+<h2 id="事务与并发控制">事务与并发控制</h2>
+<p>事务是数据库执行操作的最小的逻辑单元，事务可以由一个或多个SQL组成，这些事务的要么全部执行成功，要么全部执行失败。<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/image-20201026221028770.png" alt="事务相关命令" loading="lazy"></p>
+<h3 id="事务的特性">事务的特性</h3>
+<figure data-type="image" tabindex="1"><img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201026221301.png" alt="事务的特性" loading="lazy"></figure>
+<h3 id="并发问题">并发问题</h3>
+<ol>
+<li>脏读：一个事务读取了另一个事务未提交的数据；</li>
+<li>不可重复读：一个事务前后的两次读取，数据不一致；</li>
+<li>幻读：一个事务两次查询的结果集记录数不一致。</li>
+</ol>
+<p>InnoDB的隔离级别，默认是RR<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201026221301.png" alt="隔离级别" loading="lazy"></p>
+<p>查看事务的隔离级别</p>
+<pre><code class="language-bash">show variables like '%iso%';
+</code></pre>
+<p>设置事务的隔离级别<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/image-20201026222637025.png" alt="设置事务的隔离级别" loading="lazy"><br>
+InnoDB中的锁</p>
+<ul>
+<li>查询需要对资源加共享锁（S）</li>
+<li>数据修改需要对资源加排他锁（X）<br>
+<img src="https://for-markdown.oss-cn-shanghai.aliyuncs.com/20201026221301.png" alt="InnoDB中的锁" loading="lazy"></li>
+</ul>
+<p>阻塞和死锁</p>
+<ul>
+<li>
+<p>阻塞：由于不同锁之间的兼容关系，造成的一个事务需要等待另一个事务释放其所占用的资源的现象。</p>
+<pre><code class="language-mysql"># 使用以下SQL可以查找出，阻塞超过30s的线程
+ SELECT waiting_pid as '被阻塞的线程'，
+        waiting_query as '被阻塞的SQL'，
+        blocking_pid as '阻塞线程',
+        wait_age as '阻塞时间',
+        sql_kill_blocking_query as '建议操作'
+ FROM sys.innodb_lock_waits
+ WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(wait_started)) &gt; 30
+</code></pre>
+<p>出现阻塞时，可以手动杀掉占用资源的事务（kill query connection_id），当最好的办法是优化占用资源事务的SQL，使其尽快释放资源。</p>
+</li>
+<li>
+<p>死锁：并行执行的多个事务相互占用对方所需要的资源。</p>
+<pre><code class="language-mysql"># 把死锁记录到mysql的错误日志中
+ set global innodb_print_all_deadlocks=on;
+</code></pre>
+</li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E5%BA%93">什么是数据库</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%B1%BB%E5%9E%8B">数据库的类型</a></li>
+<li><a href="#mysql%E5%AE%89%E8%A3%85">MySQL安装</a></li>
+<li><a href="#mysql%E5%B8%B8%E8%A7%81%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">MySQL常见的存储引擎</a></li>
+<li><a href="#mysql%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">MySQL的数据类型</a></li>
+<li><a href="#sql%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95">SQL常用语法</a>
+<ul>
+<li><a href="#%E8%A1%A8%E7%BB%93%E6%9E%84%E7%9B%B8%E5%85%B3%E7%9A%84%E6%93%8D%E4%BD%9C">表结构相关的操作</a></li>
+<li><a href="#%E8%A1%A8%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3%E7%9A%84%E6%93%8D%E4%BD%9C">表数据相关的操作</a></li>
+</ul>
+</li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0">系统函数</a>
+<ul>
+<li><a href="#%E6%97%B6%E9%97%B4%E5%87%BD%E6%95%B0">时间函数</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0">字符串函数</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6">事务与并发控制</a>
+<ul>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%89%B9%E6%80%A7">事务的特性</a></li>
+<li><a href="#%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98">并发问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '9f58dbffcdaf89d24412',
+            clientSecret: '1285bea2c70ba4c5d996b68cf847056d9b5b68fd',
+            repo: 'daffupman.github.io',
+            owner: 'daffupman',
+            admin: ['daffupman'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

@@ -1,0 +1,453 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    redis | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        redis</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/1d0KrCQDR/">
+                        Redis
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-11-10</time>
+                    
+                        <a href="https://daffupman.github.io/odW_eMmv5/" class="post-tag i-tag
+                            i-tag-error">
+            #redis
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/1d0KrCQDR/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/1_77Vo1RFQ-5DcLKdeHbb2-A.png) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            NoSQL数据库
+NoSQL,即Not only SQL，不仅仅是SQL，泛指非关系型数据库。NoSQL不依赖业务逻辑方式存储，而以简单的key-value模式存储。因此大大地增加了数据库的扩展能力。NoSQL不遵循SQL标准，不支持ACID，当有着远超SQL的性能。
+适用的场景有：对数据高并发的读写、海量数据的读写、对数据高扩展性的以及用不着sql的和用了sql也不行的情况。但不适用于需要事务支持，也不可用于基于sql的存储和查询。
+Redis
+Redis是一个开源的key-value存储系统。Redis支持各种数据结构，包括string、list、set、zset和hash。这些数据类型都支持push/pop、add/remove及取交集并集和差集等丰富的操作，且这些操作都是原子性的。在此基础上，Redis支持各种不同方式的排序。为保证效率，Redis的数据都缓存在内存中，同时也会周期性地把数据写入磁盘或把修改操作写入记录文件，在此基础上实现master-slave同步。
+Redis是单线程+IO多路复用技术。多路复用是指使用一个线程来检查多个文件描述符（Socket）的就绪状态，比如调用select和poll函数，传入多个文件描述符，如果有一个文件描述符就绪，则返回，否则阻塞直到超时。得到就绪状态后进行真正的操作可以在同一个线程里执行，也可以启动线程执行。
+安装
+
+下载地址：https://download.redis.io/releases/redis-5.0.5.tar.gz
+在/opt目录下解压缩tar -zxvf redis-5.0.5.tar.gz
+
+
+安装gcc环境yum -y install gcc-c++
+
+
+在redis目录下编译运行make &amp;amp;&amp;amp; make install
+
+
+配置文件到/etc/redis/下cp /opt/redis-5.0.5/redis.conf /etc/redis/
+
+
+修改配置文件vim /etc/redis/redis.conf
+
+
+#修改daemonize为yes，后台运行
+daemonize yes
+#所有机器可连接
+bind 0.0.0.0
+#注释掉保护模式
+#protected-mode yes
+#设置登录密码
+requirepass root
+#设置工作目录
+dir /usr/local/redis
+
+
+开机自启
+
+拷贝启动脚本到 /etc/init.d 下cp /opt/redis-5.0.5/utils/redis_init_script /etc/init.d
+
+
+编辑脚本文件vim /etc/init.d/redis_init_script
+
+
+########### 第二行添加以下文字 ############
+#chkconfig: 22345 10 90
+#description: start redis at boot time
+#修改CONF属性值为redis自定义的配置
+CONF=&amp;quot;/etc/redis/redis.conf&amp;quot;
+
+
+加入系统自启chkconfig --add redis_init_script
+
+
+开启脚本chkconfig redis_init_script on
+
+
+
+
+重启redis./etc/init.d/redis_init_script start
+
+
+
+Redis五大数据类型
+String类型
+String是最基本的类型，采用key-value形式。String类型使二进制安全的，redis的String可以包含任何数据，如图片或序列化对象。一个Redis中字符串value最多可以是512M。使用示例：
+
+get 				# 查询对应的键值
+set  		# 添加键值对
+append  	# 将给定的value追加到原值的末尾
+strlen 			# 获得值得长度
+setnx  		# key不存在时设置key
+incr 				# key值加一，如果key为null，key则为1
+decr 				# key值建议，如果key为null，key则为-1
+incrby/decrby  &amp;lt;步长&amp;gt;	#key值按指定步长变化
+mset     ...# 同时设置一个或多个key-val对
+mget     ...# 同时获取一个或多个value
+msetnx    	# 同时设置一个或多个key-val对，当且仅当key都不存在
+getrange   	# 获得值得范围
+setrange   	# 从start位置开始，用val覆写key所存储的值
+setex   		# 设置key-val，同时加上过期时间
+getset  				# 设置新值，返回旧值
+
+List类型
+单值多键。Redis列表是简单的字符串列表，按照插入顺序排序。key从列表的头部（左边）或尾部（右边）插入。List底层是双向链表，两端操作性能很高，中间的节点相对较差。
+
+lpush/rpush   ...   # 从左边/右边插入一个或多个值
+lpop/rpop   # 从左边/右边吐出一个值，值在键在，值光键亡
+rpoplpush    # 从key1列表右边吐出一个值，从左边插入&amp;gt; key2
+lrange     # 按照索引下标获得元素（从左到右）
+lindex    # 按照索引下标获得元素（从左到右）
+llen   # 获得列表长度
+linsert  before  	 # 在val后面插入newValue
+lrem   	 # 从左边删除n个val
+
+Set类型
+set可以自动去重，并判断某个成员是否在一个set集合类。set是String类型的无序集合，底层为一个value为null的hash表，所以删除、查找的复杂度都是O(1)。
+
+sadd   ...			# 将多个元素放入到key集合中，相同的则忽略
+smembers 						# 取出该集合的所有值
+sismember  				# 判断key集合是否有val值，有返1，无返0
+scard 							# 返回该集合的元素个数
+srem   			# 删除集合种的元素
+spop 							# 随机吐出一个值
+srandmember  				# 随机从key集合中取出n个值，不会删除
+sint  					# 返回两个集合的交集元素
+sunion  				# 返回两个集合的并集元素
+sdiff  					# 返回两个集合的差集元素
+
+Hash类型
+Hash是一个string类型的field和value的映射表，HashMap适合用于存储对象。使用示例：
+
+hset   		# 给key集合中的field键赋值value
+hget  				# 从key1集合field取出value
+hmset     	# 批量设置hash的值
+hexists key 				# 查看hash表key中，给定field是否存在
+hkeys 						# 列出该hash集合的所有field
+hvals 						# 列出该hash集合的所有value
+hincrby   	# 为hash表key中的域field的值加上increment
+hsetnx   	# 当field不存在时，将key中的field值设置为value
+
+zset类型
+zset是一个没有重复元素的字符串集合。与set集合不同的是，有序集合的每个成员都关联了一个评分，这个评分score被用来按照从最低分到最高分的方式排序集合中的成员。集合的成员是唯一的，但是评分可以是重复的。
+因为元素是有序的，可以很快的根据评分或次序来获取一个范围的元素。访问有序集合的中间元素也很快。
+使用示例：
+
+zadd     ...	# 将一个或多个元素及其score值加入到有序集key中
+zrang    [withscores]			# 返回有序集key中，下标在和之间的元素（含scores）
+zrangebyscore key min max [withscores] [limit offset count]	# 返回有序集key中，所有score值介于min和max之间（包含）的成员，有序集成员按score值递增排列
+zrevrangebyscore key max min [withscores] [limit offset count]	# 同上，逆序
+zincrby   	# 为元素的score加上增量
+zrem  	# 删除该集合下指定值得元素
+zcount   	#统计该集合，分数区间内的元素个数
+zrank  	# 返回该值在集合中的排名（基于0）
+
+Redis事务
+Redis事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。
+特性
+
+单独的隔离操作
+没有隔离级别概念
+不保证原子性
+
+指令
+
+multi：开启multi后，之后的命令入队，但不会执行；
+exec：执行入队的命令；
+discard：在入队的过程中可以使用discard放弃组队正常的事务执行流程。
+当组队阶段中某个命令出现了错误，在exec时整个队列都会被取消。如果执行阶段某个命令报错，只有报错的命令不会被执行，而其他的命令都会执行，不会回滚。
+
+事务的冲突和解决方式
+事务中可能存在的多个指令同时修改某个共享资源，但实际上有限的共享资源是不足以满足那些所有的指令的。这时候就是一个事务冲突的现象。一般可以借助悲观锁或乐观锁的思想解决。
+悲观锁（Pessimistic Lock）
+悲观锁认为每次对数据的操作都是会修改的，所有每次都会加上锁。在传统的关系型数据库中用的很多，比如：行锁、表锁、读锁、写锁等。
+乐观锁（Optimistic Lock）
+与悲观锁相反，乐观锁认为每次对数据的操作都不会修改，所以并不会上锁，但会在数据更新的时候同时判断此期间原来的数据有没有被修改，一般使用版本号机制（check-and-set）。
+在redis也有应用乐观锁的相应的指令：watch。在执行multi指令之前，先使用watch命令监视一个或多个key。
+watch k1 [k2, ...]
+
+在事务执行（exec）之前，只要这些被监视的key有所改动，那么事务将被打断。也可使用unwatch取消对key的监视。
+Redis的持久化
+redis是一种内存数据库，但也提供了持久化的技术。主要有RDB和AOF。
+RDB（Redis Database）
+在指定的时间内将内存中的数据集快照（snapshot）写入磁盘，恢复时将快照文件读入内存。
+RDB的过程大致是这样的：Redis会单独创建（fork）一个子进程做持久化。子进程先将数据写入到一个临时文件中，待持久化结束后，再用这个临时文件替换上一次持久化好的文件。整个过程中，主进程不进行任何IO操作，确保了极高的性能。如果需要大规模数据的恢复，且对于数据的恢复的完整性不高，那RDB会比AOF更高效，但缺点就是丢失最后一次持久化的数据。
+
+关于fork：
+在linux系统中，调用fork()会产生一个和父进程完全相同的子进程，但子进程在此后多会exec系统调&amp;gt; 用。出于效率考虑，Linux中引入“写时复制”技术，一般情况父进程和子进程会共用一段物理内存，只有&amp;gt; 进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程。
+
+配置文件相关的配置项
+
+#db保存的文件名称
+dbfilename dump.rdb
+#rdb文件的保存的路径
+dir ./
+#rdb的保存策略
+save 900 1
+save 300 10
+save 60 10000
+#当redis无法写入磁盘的话，直接关闭redis的写操作。可能造成数据不一致
+stop-writes-on-bgsave-error yes
+#进行RDB保存时将文件压缩，会消耗一些cpu的资源
+rdbcompression yes
+#关闭rdb存储数据时的数据校验，可提升性能，开启的话会有10%的性能损耗
+rdbchecksum no
+
+备份与恢复
+备份
+config get dir	# 查询RDB文件的路径
+cp *.rdb /target	# 复制备份文件到其他目录
+
+恢复
+cp /target/* /redis	# 将备份的文件复制到dir下，redis启动时会自动加载
+
+RDB的优点和缺点
+
+优点
+
+每隔一段时间全量备份数据
+灾备简单，可远程传输
+子进程备份的时候，主进程不会有任何io，保证数据的完整性
+相对于aof，可以快速重启恢复大文件
+
+
+缺点
+
+相对于aof，可以快速重启恢复大文件
+子进程会和父进程占用的大小一样的内存，cpu压力大
+不能实时备份
+
+
+
+AOF（Append Of File）
+以日志的形式来记录每个写操作。将redis执行的每一个写指令（读指令不管）记录在文件里，该文件只能追加，不能更改。redis在启动之初，会读取日志文件，重新执行所有的命令。AOF默认不开启，需要修改配置文件。
+
+#开启aof
+appendonly yes
+#指定aof文件，路径与rdb一致
+appendfilename &amp;quot;appendfileonly.aof&amp;quot;
+
+apf的备份与恢复与rdb一样。当同时开启aof和rdb，系统默认读取aof的数据。如果aof文件损害，使用以下命令恢复：redis-check-aof --fix appendonly.aof。
+aof的配置
+
+#appendfsync always
+appendfsync everysec	# 不确定则使用这个，每秒进行一次备份
+#appendfsync no
+#重写的时候是否要同步，no可以保证数据安全
+no-appendfsync-on-rewrite no
+#重写机制：避免文件越来越大，自动优化压缩指令，会fork一个新的进程去完成重写动作，新进程里的内存数据会被重写，此时旧的aof文件不会被读取使用，类似rdb
+#当前AOF文件的大小是上次AOF大小的100% 并且文件体积达到64m，满足两者则触发重写
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+
+aof的优点和缺点
+
+优点：
+
+aof操作可以增加数据的可靠性和完整性，还可以异步操作；
+以日志的形式追加，在磁盘满的时候，会执行redis-check-aof；
+数据大的时候，redis会自动重写aof，重写是安全的，不会影响到客户端的读写；
+
+
+缺点：
+
+相同的数据，aof会比rdb占用的内存大；
+aof的同步机制会不如rdb，aof每秒都做备份写数据，相对于rdb来说速度较慢。以fsync备份的话，可以提升速度，但也会影响cpu性能。
+
+
+
+RDB和AOF选择问题
+RDB适合大量数据的恢复，但数据的完整性和一致性可能会不足。RDB可能会丢失最后一次的备份，作为缓存来说，是可以忍受的。但是缓存的数据是要保证数据的完整性，需要使用AOF。
+
+如果可以接受一段时间的缓存丢失，可以使用RDB
+如果需要保证实时性的数据，使用AOF
+RDB和AOF可以一起使用，RDB做冷备，可在不同时期对不同版本做备份，AOF做热备，数据可以只有1秒的丢失。当AOF不可用的使用，可以再用RDB恢复。也就是Redis的恢复会先加载AOF，如果AOF有问题，会加载RDB。
+如果只做缓存，都不用
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/1d0KrCQDR/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://daffupman.github.io/images/avatar.png?v=1634906345588)">
+        </div>
+        <h1 class="id_card-title">
+            
+        </h1>
+        <h2 class="id_card-description">
+            
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>

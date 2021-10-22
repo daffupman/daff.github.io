@@ -1,0 +1,334 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    git | 
+</title>
+<link rel="shortcut icon" href="https://daffupman.github.io/favicon.ico?v=1634906345588">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://daffupman.github.io/styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://daffupman.github.io/media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://daffupman.github.io">
+                <img class="avatar" src="https://daffupman.github.io/images/avatar.png?v=1634906345588" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/post/about" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        git</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://daffupman.github.io/br1NMVbE5/">
+                        Git操作指南
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2021-03-14</time>
+                    
+                        <a href="https://daffupman.github.io/SfRQdaNBV/" class="post-tag i-tag
+                            i-tag-error">
+            #git
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://daffupman.github.io/br1NMVbE5/" class="post-feature-image" style="background-image:url(https://for-markdown.oss-cn-shanghai.aliyuncs.com/git_cover.jfif) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            快速上手
+
+git下载地址：https://git-scm.com/
+配置用户信息git config --global user.name = &amp;lt;username&amp;gt;   # 配置用户名，加&amp;quot;&amp;quot;
+git config --global user.email = &amp;lt;useremail&amp;gt;    # 配置邮箱，加&amp;quot;&amp;quot;
+git config --list # 查询配置信息
+
+
+创建目录并初始化仓库，会生成一个.git的隐藏文件夹git init &amp;lt;dirName&amp;gt;
+
+
+关联远程仓库git remote add &amp;lt;name&amp;gt; &amp;lt;url&amp;gt;		# 添加远程仓库
+git remote						#列出所有远程仓库
+
+
+复制远程仓库中的项目git clone &amp;lt;url&amp;gt;
+
+
+文件提交git add &amp;lt;file&amp;gt;						#把文件从workspace添加进index中
+git commit &amp;lt;file&amp;gt; -m &amp;lt;comment&amp;gt;		#把文件从index添加进repostory中
+
+
+从远程仓库更新项目git pull &amp;lt;name&amp;gt; master
+
+
+提交到远程仓库git push &amp;lt;name&amp;gt; master
+
+
+
+Git原理
+Git工作空间
+
+Git常用命令
+
+
+查看当前状态
+git status
+
+
+
+把指定文件恢复到暂存区
+git reset HEAD &amp;lt;file&amp;gt;
+
+
+
+把暂存区的文件恢复并覆盖到工作区
+git checkout -- &amp;lt;file&amp;gt;
+
+
+
+查看提交历史
+git log
+
+
+
+文件在各个空间的切换
+
+HEAD指针指向仓库中的当前版本：HEAD~n,表示前第n个版本；
+移动HEAD指向，指向上一个快照；再将指针指向的快照回滚带暂存区（默认情况）
+git reset --mixed HEAD~
+
+移动HEAD指针的指向，指向上一个快照
+git reset --soft HEAD~
+
+移动HEAD指针的指向，指向上一个快照；将指向的快照回滚到暂存区；将暂存区的文件还原到工作区
+git reset --hard HEAD~
+
+
+
+版本回滚
+回滚到指定快照
+git log			#查看快照id（一串哈希值）
+git reset [id]	#回到该id快照
+
+
+
+版本比较
+
+比较工作空间和暂存目录git diff
+
+
+比较两个历史快照git diff 快照id1 快照id2
+
+
+比较当前工作去和仓库中的快照git diff 快照id
+
+
+比较暂存区和仓库的快照(不加快照id默认是HEAD指向的版本)git diff --cached 快照ud
+
+
+奥义图
+
+
+
+
+其他
+
+更正最新一次的提交备注git commit --amend -m &amp;quot;description&amp;quot;
+
+
+删除文件（除了删除工作区域和暂存区域的该文件外，还需要修改仓库HEAD指向，将其指向上一个版本，上个版本是不包含该文件的）git rm &amp;lt;file&amp;gt;
+git reset --soft HEAD~
+
+
+删除暂存区域的文件， 不会删除工作目录的文件git rm --cached &amp;lt;file&amp;gt;
+
+
+重命名文件git mv &amp;lt;oldname&amp;gt; &amp;lt;newname&amp;gt;
+
+
+
+
+
+Git分支
+
+创建新分支git branch &amp;lt;branchname&amp;gt;
+
+
+--decorate:下那是tag信息； --oneline:精简显示每个快照； --graph:图形化显示git log --decorate --oneline --graph -all
+
+
+切换分支，此时HEAD指针会指向切换的分支上git checkout &amp;lt;brachname&amp;gt;
+git checkout -b &amp;lt;branchname&amp;gt;		#创建分支，并切换到新分支中
+
+
+合并分支git merge &amp;lt;branchname&amp;gt;
+
+
+删除分支git branch -d &amp;lt;branchname&amp;gt;
+
+
+
+ssh授权
+
+授权命令，以生成公钥和私钥： ssh-keygen -t rsa
+在github上的settings-&amp;gt;SSH and GPG keys中添加公钥
+验证是否授权成功：ssh -T git@github.com
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://daffupman.github.io/br1NMVbE5/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://daffupman.github.io/images/avatar.png?v=1634906345588)">
+        </div>
+        <h1 class="id_card-title">
+            
+        </h1>
+        <h2 class="id_card-description">
+            
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+   | 
+  <a class="rss" href="https://daffupman.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>
